@@ -7,10 +7,22 @@ import Footer from '../components/Footer/footer';
 
 const Home: NextPage = () => {
   return (
-    <div className=' bg-black font-primary h-screen text-white'>
+    <div className='font-primary h-screen text-white'>
       <Navbar />
       <Body />
       <Footer />
+      <div className='header__squares'>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   );
 };

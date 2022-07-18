@@ -26,14 +26,14 @@ export default function Navbar() {
                     <h1
                       className='block lg:hidden h-8 w-auto font-bold text-web_large'
                       alt='dsi.'>
-                      EazyVideo<span className=' text-yellow'>.</span>
+                      EazyVideo<span className=' text-yellow'>.</span>📺
                     </h1>
                   </Link>
                   <Link href='/'>
                     <h1
                       className='hidden lg:block h-8 w-auto font-bold text-web_large'
                       alt='dsi.'>
-                      EazyVideo<span className=' text-yellow'>.</span>
+                      EazyVideo<span className=' text-yellow'>.</span>📺
                     </h1>
                   </Link>
                 </div>
@@ -42,10 +42,14 @@ export default function Navbar() {
                 <Disclosure.Button as='a'>
                   <div className=' flex flex-col'>
                     <div>
-                      How it works{' '}
-                      <span className=' text-yellow text-right text-web_normal font-bold'>
-                        .
-                      </span>
+                      <button
+                        onClick={() => {}}
+                        className='bg-purple hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
+                        Connect to wallet{' '}
+                        <span className=' text-yellow text-right text-web_normal font-bold'>
+                          .
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </Disclosure.Button>
