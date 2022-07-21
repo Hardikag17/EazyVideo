@@ -65,7 +65,7 @@ export default function AddService() {
         <div className=' bg-white w-full h-12 mx-2 items-center rounded-lg border-2 border-solid border-grey shadow-xl flex flex-nowrap flex-row justify-around'>
           <label className=' text-black h-full  border-2 border-solid border-grey focus:outline-none w-48 '>
             {' '}
-            Price Per Pay
+            Price
           </label>
           <input
             className='rounded-l h-full bg-white text-black w-full px-4 text-gray leading-tight focus:outline-none'
@@ -73,11 +73,21 @@ export default function AddService() {
             onChange={(e) =>
               updateFormInput({ ...formInput, perDayPrice: e.target.value })
             }
-            placeholder='Eg: 0.5'
+            placeholder='0.5 MATIC'
           />
           <h1 className=' text-black rounded-lg border-2 border-solid border-grey focus:outline-none w-24 h-full '>
             MATIC
           </h1>
+          For
+          <input
+            className='rounded-l h-full bg-white text-black w-full px-4 text-gray leading-tight focus:outline-none'
+            type='number'
+            onChange={(e) =>
+              updateFormInput({ ...formInput, perDayPrice: e.target.value })
+            }
+            placeholder='30 days'
+          />
+          Days
         </div>
         <div>
           <input

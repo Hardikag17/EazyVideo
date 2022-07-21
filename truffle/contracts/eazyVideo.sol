@@ -8,32 +8,43 @@ import {ERC721} from "./nft.sol";
  */
 
 contract EazyVideo {
-    struct Plan {
+    // For only service providers
+    struct Service {
+        string name;
+        uint256 description;
         uint256 planDuration;
-        string[] tokenIDes;
+        string[] tokenIDs;
         uint256 price;
     }
 
-    struct ServiceProvider {
+    // For user type
+    struct User {
+        // Plan nfts of users
+        Plan[] availablePlans;
+        // For Lend nfts of users that are available for rent for a specific time.
+        ForLend[] forLendPlans;
+    }
+
+    struct Plan {
+        string tokenID;
         string name;
         uint256 description;
-        // Three type of plans by service providers eg: 30, 60, 90 days or 1 day
-        Plan[] plandetails;
-        uint256 collectdebt;
+        uint256 duration;
+        uint256 endDate;
     }
 
-    //for user type
-    struct User {
-        string[] nftlist; // user nft’s
-        string[] forRentList; // nft of users that are available for rent for a specific time.
-        uint256 collectDebt;
+    struct ForLend {
+        string tokenID;
+        string name;
+        uint256 description;
+        uint256 duration;
+        uint256 endDate;
+        uint256 amount;
     }
 
-    ServiceProvider[] services;
-    User[] user;
+    Service[] services;
+    User[] users;
 
-    // every nft price for user to give set by user or a service provider
-    // mapping(uint256=>uint256) nftIdToPrice;
     // True for Service provider, False for a User
     mapping(address => bool) accountType;
     // user wallet address to user array index
@@ -46,7 +57,7 @@ contract EazyVideo {
      */
     modifier onlyUser() {
         require(
-            userToId[msg.sender] <= user.length,
+            userToId[msg.sender] <= users.length,
             "User does not exist in the pool"
         );
         _;
@@ -63,60 +74,33 @@ contract EazyVideo {
         _;
     }
 
-    function addUserToPlatform(bool _accountType) public {
-        require(!userToId[msg.sender], "User does not exist in the pool");
-        require(!serviceProviderToId[msg.sender], "User is a service provider");
+    function addToPlatform(bool _accountType) public {
+        require(!userToId[msg.sender], "User already exists");
+        require(
+            !serviceProviderToId[msg.sender],
+            "User is already a service provider"
+        );
+
         accountType[msg.sender] = _accountType;
 
         //user
         if (_accountType == false) {
-            user.push(User({nftlist: [], forRentList: [], collectDebt: 0}));
+            users.push(User({availablePlans: [], forLendPlans: []}));
+            userToId[msg.sender] = users.length - 1;
         }
-    }
-
-    /**
-     * @notice function can be called by only a service provider wallet address
-     * for adding a new service.
-     */
-    function addNewServiceProvider(
-        string calldata _name,
-        uint256 _description,
-        uint256 planDuration1,
-        uint256 planDuration2,
-        uint256 planDuration3,
-        uint256 plan1Price,
-        uint256 plan2Price,
-        uint256 plan3Price
-    ) public {
-        require(
-            serviceProviderToId[msg.sender] < services.length,
-            "You are already a registered service"
-        );
-        accountType[msg.sender] = _accountType;
-        services.push(
-            ServiceProvider({
-                name: _name,
-                description: _description,
-                plandetails: [
-                    Plan({
-                        planDuration: planDuration1,
-                        tokenIDes: [],
-                        price: plan1Price
-                    }),
-                    Plan({
-                        planDuration: planDuration2,
-                        tokenIDes: [],
-                        price: plan2Price
-                    }),
-                    Plan({
-                        planDuration: planDuration3,
-                        tokenIDes: [],
-                        price: plan3Price
-                    })
-                ],
-                collectdebt: 0
-            })
-        );
+        // serviceProvider
+        if (__accountType == true) {
+            serviceProviderToId[msg.sender] = services.push(
+                ServiceProvider({
+                    name: _name,
+                    description: _description,
+                    planDuration: planDuration1,
+                    tokenIDs: [],
+                    price: planPrice
+                })
+            );
+            serviceProviderToId[msg.sender] = services.length - 1;
+        }
     }
 
     /**
@@ -124,60 +108,64 @@ contract EazyVideo {
      */
     function updateService() public onlyServiceProvider {}
 
-    // _planType = 0, 1, 2
-    function takeService(
-        string _nftName,
-        address _serviceProviderWallet,
-        uint256 _planType,
-        string tokenID
+    /**
+     * @notice method to buy service from service providers
+     */
+    function BuyServiceFromServiceProvider(
+        string _serviceName,
+        address _serviceProviderWallet
     ) public onlyUser {
-        ServiceProvider storage service = services[_serviceProviderWallet];
+        ServiceProvider storage service = services[
+            serviceProviderToId[_serviceProviderWallet]
+        ];
 
-        uint256 _time = block.timestamp +
-            service.plandetails[_planType].planDuration;
-        uint256 price = service.plandetails[_planType].price;
-        string memory _description = service.description;
+        uint256 _time = block.timestamp + service._planDuration;
+        uint256 price = service._price;
+        string memory _description = service._description;
 
-        mintNFT(_nftName, price, msg.sender, tokenID, _description, _time);
+        address(_serviceProviderWallet).transfer(service._price);
+        mintNFT(_nftName, _price, msg.sender, _tokenID, _description, _time);
 
-        service.plandetails[_planType].tokenIDes.push(tokenID);
-        userToId[msg.sender].nftlist = tokenID;
+        service.tokenIDs.push(_tokenID);
+        userToId[msg.sender].tokenID = _tokenID;
     }
 
     /**
      * @notice method to lend the nfts for rents in thier profile by giving the time lending for
      * User can’t rent a nft for time more than he owns it - This requires a check from a nft metadata
      */
-    function AddToLend(
+    function LendPlan(
         uint256 _amount,
         uint256 _days,
-        string tokenID
+        string _tokenID
     ) public onlyUser returns (bool) {
-        User storage user = userToId[msg.sender];
-        for (int256 i = 0; i < user.nftlist.length; i++) {
-            if (user.nftlist[i] == tokenID) {
-                user.nftlist[i] = user.nftlist[user.nftlist.length - 1];
-                user.nftlist.pop();
-                user.forRentList.push(tokenID);
-                return true;
+        User storage user = users[userToId[msg.sender]];
+        //Plan[] availablePlans;
+        //ForLend[] forLendPlans;
+        ForLend ForLendPlan;
+        for (int256 i = 0; i < user.availablePlans.length - 1; i++) {
+            if (user.availablePlans[i].tokenID == _tokenID) {
+                ForLendPlan.amount = _amount;
+                ForLendPlan.description = user.availablePlans[i].description;
+                require(
+                    user.availablePlans[i].endDate <= block.timestamp + _days,
+                    " Can not lend for this many days"
+                );
+                ForLendPlan.duration = _days * 1 days;
+                ForLendPlan.endDate =
+                    (block.timestamp * 1 days) +
+                    ForlendPlan.duration;
+                _burn(user.availablePlans[i].tokenID);
+                if (user.availablePlans.length < 2) {
+                    user.availablePlans.length = 0;
+                } else {
+                    user.availablePlans[i] = user.availablePlans[
+                        user.availablePlans.length - 1
+                    ];
+                }
             }
         }
-        return false;
-    }
-
-    function check(string memory tokenID, address seller) internal {
-        User storage seller = userToId[seller];
-        for (int256 i = 0; i < seller.forRentList.length; i++) {
-            if (seller.forRentList[i] == tokenID) {
-                seller.forRentList[i] = seller.nftlist[
-                    seller.nftlist.length - 1
-                ];
-                seller.forRentList.pop();
-                return true;
-            }
-        }
-
-        return false;
+        user.forLendPlans.push(ForLendPlan);
     }
 
     /**
@@ -185,19 +173,31 @@ contract EazyVideo {
      * available nfts by giving the days user is renting it for and giving the amount to
      * the nft owner
      */
-
-    function TakeOnRent(
-        address seller,
+    function RentPlan(
+        address _seller,
         uint256 _amount,
-        uint256 _days,
-        string tokenID
+        uint256 _days, // _days multiplied by per day amount is total amount
+        string _name
     ) public onlyUser {
-        User storage seller = userToId[seller];
-        require(
-            check(tokenID, seller),
-            " Seller don't own this nft to sell you"
-        );
+        User storage seller = userToId[_seller];
+        for (int256 i = 0; i < seller.forLendPlans; i++) {
+            if (seller.forLendPlans[i].name == _name) {
+                require(
+                    seller.forLendPlans[i].tokenID == 0,
+                    "Seller already rent this plan to seomeone else"
+                );
+                uint256 _price = (seller.forLendPlans[i].amount) * _days;
+                address(_seller).transfer(_price);
 
-        transferNFT(seller, msg.sender, tokenID);
+                mintNFT(
+                    _name,
+                    _price,
+                    msg.sender,
+                    _tokenID,
+                    seller.forLendPlans[i].description,
+                    block.timestamp + _days
+                );
+            }
+        }
     }
 }
