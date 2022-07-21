@@ -4,6 +4,7 @@ import type { Contract } from 'web3-eth-contract';
 import { NET_ID, RPC_URL, notify, fetchIpfs } from './helpers';
 
 export const connectToWallet = async () => {
+  console.log('connect to wallet clicked');
   if (window.ethereum) {
     try {
       await window.ethereum.request({ method: 'eth_requestAccounts' });

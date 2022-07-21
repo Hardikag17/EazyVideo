@@ -2,9 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import Navbar from '../components/Navbar/navbar';
 import Footer from '../components/Footer/footer';
-import Card from '../components/Body/card';
+import Service from '../components/User/BuyCard';
+import { useState } from 'react';
+import LendCard from '../components/User/LendCard';
+import RentCard from '../components/User/RentCard';
 
 export default function User() {
+  const [link, setLink] = useState(<Service />);
+
   return (
     <div className=' h-screen'>
       <Navbar />
@@ -12,30 +17,28 @@ export default function User() {
         <div className='lg:w-1/6 flex flex-col w-full  items-center'>
           <div className=' w-full m-1 flex lg:flex-col flex-row justify-around'>
             <button
-              onClick={() => {}}
+              onClick={() => setLink(<LendCard />)}
+              className='bg-purple m-2 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-lg text-center'>
+              Bag
+            </button>
+            <button
+              onClick={() => setLink(<Service />)}
               className='bg-purple m-2 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-lg text-center'>
               Buy
             </button>
             <button
-              onClick={() => {}}
-              className='bg-purple m-2 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-lg text-center'>
-              Lend
-            </button>
-            <button
-              onClick={() => {}}
+              onClick={() => setLink(<RentCard />)}
               className='bg-purple m-2 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-lg text-center'>
               Rent
             </button>
           </div>
         </div>
-        <div className='w-full h-full flex flex-col items-center '>
+        <div className='lg:w-5/6 h-full flex flex-col items-center '>
           {' '}
           <h1 className=' text-white mx-auto font-semibold text-2xl py-2'>
-            User data
+            <u>OTT Plans</u>
           </h1>
-          <div className=' flex flex-row justify-around mx-auto'>
-            <Card />
-          </div>
+          <div className=' flex flex-col justify-around mx-auto'>{link}</div>
         </div>
       </div>
       <Footer />

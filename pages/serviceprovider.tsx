@@ -1,6 +1,6 @@
 import Footer from '../components/Footer/footer';
 import Navbar from '../components/Navbar/navbar';
-import Card from '../components/Body/card';
+import Card from '../components/ServiceProvider/ServiceCard';
 import AddService from '../components/Body/addService';
 import { useState } from 'react';
 
@@ -37,9 +37,6 @@ export default function ServiceProvider() {
               className='bg-purple m-2 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-lg text-center'>
               Current
             </button>
-            <div className=' text-white m-2 lg:py-3 p-3'>
-              <h1>Pending Collection</h1> x MATIC
-            </div>
           </div>
         </div>
         <div className='w-full h-full flex flex-col items-center '>

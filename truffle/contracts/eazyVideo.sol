@@ -192,7 +192,7 @@ contract EazyVideo {
         uint256 _days, // _days multiplied by per day amount is total amount
         string _name
     ) public onlyUser {
-        User storage seller = userToId[_seller];
+        User storage seller = users[userToId[_seller]];
         for (int256 i = 0; i < seller.forLendPlans; i++) {
             if (seller.forLendPlans[i].name == _name) {
                 require(
@@ -212,5 +212,22 @@ contract EazyVideo {
                 );
             }
         }
+    }
+
+    function getUserAvailablePlans() public returns (Plan) {
+        User storage user = users[userToId[msg.sender]];
+        return user.availablePlans;
+    }
+
+    function getUserForLendPlans() public returns (Plan) {
+        User storage user = users[userToId[msg.sender]];
+        return user.forLendPlans;
+    }
+
+    function getUserService() public returns (Service) {
+        Service storage serviceProvider = services[
+            serviceProviderToId[msg.sender]
+        ];
+        return serviceProvider;
     }
 }
