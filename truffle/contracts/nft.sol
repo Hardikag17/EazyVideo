@@ -467,7 +467,7 @@ contract ERC721 {
         uint256 price,
         string memory ownerName,
         string memory uri,
-        string memory description
+        string memory description,
         uint256 time
     ) public {
         uint256 _tokenID = tID + 1;

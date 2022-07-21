@@ -89,18 +89,31 @@ contract EazyVideo {
             userToId[msg.sender] = users.length - 1;
         }
         // serviceProvider
-        if (__accountType == true) {
-            serviceProviderToId[msg.sender] = services.push(
-                ServiceProvider({
-                    name: _name,
-                    description: _description,
-                    planDuration: planDuration1,
-                    tokenIDs: [],
-                    price: planPrice
-                })
+        if (_accountType == true) {
+            services[serviceProviderToId[msg.sender]] = services.push(
+                Service()
             );
             serviceProviderToId[msg.sender] = services.length - 1;
         }
+    }
+
+    function addServiceToPlatform(
+        string memory _name,
+        string memory _description,
+        uint256 _planDuration,
+        uint256 _planPrice
+    ) public {
+        require(
+            accountType(msg.sender),
+            "You are not a registered service provider"
+        );
+        services[serviceProviderToId[msg.sender]] = Service({
+            name: _name,
+            description: _description,
+            planDuration: _planDuration,
+            tokenIDs: [],
+            price: _planPrice
+        });
     }
 
     /**
@@ -115,7 +128,7 @@ contract EazyVideo {
         string _serviceName,
         address _serviceProviderWallet
     ) public onlyUser {
-        ServiceProvider storage service = services[
+        Service storage service = services[
             serviceProviderToId[_serviceProviderWallet]
         ];
 
