@@ -152,7 +152,7 @@ export default function Navbar() {
                     </div>
                     <div>
                       <button
-                        onClick={() => connectToWallet()}
+                        onClick={connectToWallet}
                         className='bg-purple hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
                         Connect to wallet{' '}
                         <span className=' text-yellow text-right text-web_normal font-bold'>
