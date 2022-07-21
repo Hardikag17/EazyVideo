@@ -31,6 +31,7 @@ module.exports = {
     },
   },
   fontSize: {
+    big: ['70px'],
     small: ['12px'],
     web_normal: ['14px'],
     web_large: ['36px'],
