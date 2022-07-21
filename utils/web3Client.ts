@@ -3,8 +3,6 @@ import type { AbiItem } from 'web3-utils';
 import type { Contract } from 'web3-eth-contract';
 import { NET_ID, RPC_URL, fetchIpfs } from './helpers';
 
-
-
 export const connectToWallet = async () => {
   if (window.ethereum) {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -17,7 +15,6 @@ export const connectToWallet = async () => {
       if (netId !== NET_ID)
         alert('Wrong network, please switch to the Matic Mumbai testnet!');
       else {
-        console.log(account);
       }
     } catch (e) {
       alert(e);
