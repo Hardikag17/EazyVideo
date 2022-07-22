@@ -23,7 +23,8 @@
     "react-dom": "18.2.0",
     "react-notifications-component": "^4.0.1",
     "react-router-dom": "^6.3.0",
-    "web3": "^1.7.4"
+    "web3": "^1.7.4",
+    "web3modal": "^1.9.8"
   },
   "devDependencies": {
     "@types/node": "18.0.5",

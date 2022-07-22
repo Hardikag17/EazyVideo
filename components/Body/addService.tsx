@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { addService } from '../../utils/web3Client';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
@@ -10,6 +10,7 @@ export default function AddService() {
     perDayPrice: '',
     name: '',
     description: '',
+    duration: '',
   });
 
   async function onChange(e) {
@@ -24,6 +25,28 @@ export default function AddService() {
       setFileUrl(url);
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async function createService() {
+    console.log('button clicked');
+    const { perDayPrice, name, description, duration } = formInput;
+    if (!name || !description || !perDayPrice || !fileUrl) return;
+    const data = JSON.stringify({
+      name,
+      description,
+      perDayPrice,
+      duration,
+      image: fileUrl,
+    });
+
+    try {
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      // after file is uploaded to IPFS, pass the URL to save it on Polygon
+      addService(url);
+    } catch (error) {
+      console.log('Error uploading file: ', error);
     }
   }
 
@@ -56,6 +79,9 @@ export default function AddService() {
         </label>
         <textarea
           rows={5}
+          onChange={(e) =>
+            updateFormInput({ ...formInput, description: e.target.value })
+          }
           className='rounded-l bg-white text-black w-full px-4 text-gray leading-tight focus:outline-none'
           placeholder='Eg: alex'
         />
@@ -83,7 +109,7 @@ export default function AddService() {
             className='rounded-l h-full bg-white text-black w-full px-4 text-gray leading-tight focus:outline-none'
             type='number'
             onChange={(e) =>
-              updateFormInput({ ...formInput, perDayPrice: e.target.value })
+              updateFormInput({ ...formInput, duration: e.target.value })
             }
             placeholder='30 days'
           />
@@ -102,9 +128,10 @@ export default function AddService() {
         </div>
       </div>
       <div className=' py-10'>
-        <h1>Are you here first Time? Register now</h1>
         <button
-          onClick={() => {}}
+          onClick={() => {
+            createService;
+          }}
           className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
           Add
         </button>
