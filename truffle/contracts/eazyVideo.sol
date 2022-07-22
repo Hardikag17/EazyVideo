@@ -9,6 +9,7 @@ import {ERC721} from "./nft.sol";
 
 contract EazyVideo {
     // For only service providers
+
     struct Service {
         string name;
         uint256 description;
@@ -75,9 +76,9 @@ contract EazyVideo {
     }
 
     function addToPlatform(bool _accountType) public {
-        require(!userToId[msg.sender], "User already exists");
+        require(userToId[msg.sender] < users.length, "User already exists");
         require(
-            !serviceProviderToId[msg.sender],
+            serviceProviderToId[msg.sender] < users.length,
             "User is already a service provider"
         );
 
@@ -85,7 +86,7 @@ contract EazyVideo {
 
         //user
         if (_accountType == false) {
-            users.push(User({availablePlans: [], forLendPlans: []}));
+            users.push(User({availablePlans: [""], forLendPlans: [""]}));
             userToId[msg.sender] = users.length - 1;
         }
         // serviceProvider
@@ -125,22 +126,24 @@ contract EazyVideo {
      * @notice method to buy service from service providers
      */
     function BuyServiceFromServiceProvider(
-        string _serviceName,
-        address _serviceProviderWallet
+        string memory _nftName,
+        string memory _serviceName,
+        address _serviceProviderWallet,
+        address _uri
     ) public onlyUser {
         Service storage service = services[
             serviceProviderToId[_serviceProviderWallet]
         ];
 
         uint256 _time = block.timestamp + service._planDuration;
-        uint256 price = service._price;
+        uint256 _price = service.price;
         string memory _description = service._description;
 
         address(_serviceProviderWallet).transfer(service._price);
-        mintNFT(_nftName, _price, msg.sender, _tokenID, _description, _time);
+        ERC721.mintNFT(_nftName, _price, msg.sender, _uri, _description, _time);
 
-        service.tokenIDs.push(_tokenID);
-        userToId[msg.sender].tokenID = _tokenID;
+        // service.tokenIDs.push(_tokenID);
+        // userToId[msg.sender].tokenID = _tokenID;
     }
 
     /**
@@ -150,12 +153,12 @@ contract EazyVideo {
     function LendPlan(
         uint256 _amount,
         uint256 _days,
-        string _tokenID
+        string memory _tokenID
     ) public onlyUser returns (bool) {
         User storage user = users[userToId[msg.sender]];
         //Plan[] availablePlans;
         //ForLend[] forLendPlans;
-        ForLend ForLendPlan;
+        ForLend storage ForLendPlan;
         for (int256 i = 0; i < user.availablePlans.length - 1; i++) {
             if (user.availablePlans[i].tokenID == _tokenID) {
                 ForLendPlan.amount = _amount;
@@ -167,8 +170,8 @@ contract EazyVideo {
                 ForLendPlan.duration = _days * 1 days;
                 ForLendPlan.endDate =
                     (block.timestamp * 1 days) +
-                    ForlendPlan.duration;
-                _burn(user.availablePlans[i].tokenID);
+                    ForLendPlan.duration;
+                ERC721._burn(user.availablePlans[i].tokenID);
                 if (user.availablePlans.length < 2) {
                     user.availablePlans.length = 0;
                 } else {
@@ -190,7 +193,8 @@ contract EazyVideo {
         address _seller,
         uint256 _amount,
         uint256 _days, // _days multiplied by per day amount is total amount
-        string _name
+        string memory _name,
+        string memory _uri
     ) public onlyUser {
         User storage seller = users[userToId[_seller]];
         for (int256 i = 0; i < seller.forLendPlans; i++) {
@@ -202,11 +206,11 @@ contract EazyVideo {
                 uint256 _price = (seller.forLendPlans[i].amount) * _days;
                 address(_seller).transfer(_price);
 
-                mintNFT(
+                ERC721.mintNFT(
                     _name,
                     _price,
                     msg.sender,
-                    _tokenID,
+                    _uri,
                     seller.forLendPlans[i].description,
                     block.timestamp + _days
                 );
@@ -214,17 +218,17 @@ contract EazyVideo {
         }
     }
 
-    function getUserAvailablePlans() public returns (Plan) {
+    function getUserAvailablePlans() public returns (Plan calldata) {
         User storage user = users[userToId[msg.sender]];
         return user.availablePlans;
     }
 
-    function getUserForLendPlans() public returns (Plan) {
+    function getUserForLendPlans() public returns (Plan calldata) {
         User storage user = users[userToId[msg.sender]];
         return user.forLendPlans;
     }
 
-    function getUserService() public returns (Service) {
+    function getUserService() public returns (Service calldata) {
         Service storage serviceProvider = services[
             serviceProviderToId[msg.sender]
         ];

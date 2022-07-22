@@ -6,7 +6,7 @@ import {
   XIcon,
   ExclamationIcon,
 } from '@heroicons/react/outline';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState, useContext } from 'react';
 import { connectToWallet } from '../../utils/web3Client';
 
 export default function Navbar() {
@@ -150,16 +150,20 @@ export default function Navbar() {
                         How it works
                       </button>
                     </div>
-                    <div>
-                      <button
-                        onClick={connectToWallet}
-                        className='bg-purple hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
-                        Connect to wallet{' '}
-                        <span className=' text-yellow text-right text-web_normal font-bold'>
-                          .
-                        </span>
-                      </button>
-                    </div>
+                    {/* <div>
+                      {account.length > 5 ? (
+                        <div>{account}</div>
+                      ) : (
+                        <button
+                          onClick={walletConnection}
+                          className='bg-purple hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
+                          Connect to wallet{' '}
+                          <span className=' text-yellow text-right text-web_normal font-bold'>
+                            .
+                          </span>
+                        </button>
+                      )}
+                    </div> */}
                   </div>
                 </Disclosure.Button>
               </div>

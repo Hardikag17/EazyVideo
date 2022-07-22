@@ -25,7 +25,7 @@ export default function Body() {
       </div> */}
 
       <div className=' py-10 z-10 w-full'>
-        <h1>Are you here first time? Register now</h1>
+        <h1>Choose your profile type</h1>
         <div className='flex flex-row '>
           <button
             onClick={() => {}}

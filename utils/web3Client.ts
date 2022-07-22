@@ -15,6 +15,7 @@ export const connectToWallet = async () => {
       if (netId !== NET_ID)
         alert('Wrong network, please switch to the Matic Mumbai testnet!');
       else {
+        return account;
       }
     } catch (e) {
       alert(e);
