@@ -1,4 +1,19 @@
+import { EazyVideoContext } from '../../utils/eazyVideoContext';
+import { useContext } from 'react';
+import { connectToWallet } from '../../utils/web3Client';
 export default function Body() {
+  const { state, setState } = useContext(EazyVideoContext);
+
+  function userConnection() {
+    const account = connectToWallet();
+    console.log('wallet connected');
+    setState({
+      ...state,
+      account: account,
+      loaded: true,
+    });
+    console.log(account);
+  }
   return (
     <div className=' flex flex-col lg:mx-64 mx-auto lg:my-5 my-24 lg:px-4 lg:w-3/4 w-10/12'>
       <div className=' text-5xl lg:w-3/4 pt-5'>
@@ -28,7 +43,7 @@ export default function Body() {
         <h1>Choose your profile type</h1>
         <div className='flex flex-row '>
           <button
-            onClick={() => {}}
+            onClick={userConnection}
             className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
             User
           </button>
