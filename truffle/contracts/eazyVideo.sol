@@ -11,10 +11,10 @@ contract EazyVideo {
     // For only service providers
 
     struct Service {
-        string ImageUri;
         string name;
-        uint256 description;
-        uint256 planDuration;
+        string ImageUri;
+        string description;
+        uint64 planDuration;
         uint256 price;
     }
 
@@ -30,11 +30,11 @@ contract EazyVideo {
     User[] users;
 
     // True for Service provider, False for a User
-    mapping(address => bool) accountType;
+    mapping(address => bool) public accountType;
     // user wallet address to user array index
-    mapping(address => uint256) userToId;
+    mapping(address => uint256) internal userToId;
     //service provider wallet address to index in services array
-    mapping(address => uint256) serviceProviderToId;
+    mapping(address => uint256) internal serviceProviderToId;
 
     /**
      * @notice modifier to check if user is valid
@@ -87,8 +87,8 @@ contract EazyVideo {
         if (_accountType == false) {
             users.push(
                 User({
-                    availablePlans: new uint256[](0),
-                    forLendPlans: new uint256[](0)
+                    availablePlans: new Service[](0),
+                    forLendPlans: new Service[](0)
                 })
             );
             userToId[msg.sender] = users.length;
@@ -100,7 +100,7 @@ contract EazyVideo {
                     name: "",
                     ImageUri: "",
                     description: "",
-                    planDuration: "",
+                    planDuration: 0,
                     price: 0
                 })
             );
@@ -112,11 +112,11 @@ contract EazyVideo {
         string memory _name,
         string memory _ImageUri,
         string memory _description,
-        uint256 _planDuration,
+        uint64 _planDuration,
         uint256 _planPrice
     ) public {
         require(
-            accountType(msg.sender),
+            accountType[msg.sender],
             "You are not a registered service provider"
         );
         services[serviceProviderToId[msg.sender]] = Service({
@@ -133,25 +133,26 @@ contract EazyVideo {
      */
     function BuyServiceFromServiceProvider(
         string memory _serviceName,
-        address _serviceProviderWallet
-    ) public onlyUser {
+        address payable _serviceProviderWallet
+    ) public payable onlyUser {
         Service storage service = services[
             serviceProviderToId[_serviceProviderWallet]
         ];
 
         string memory _name = service.name;
         string memory _ImageUri = service.ImageUri;
-        uint256 _time = block.timestamp + service._planDuration;
+        uint256 _time = block.timestamp + service.planDuration;
         uint256 _price = service.price;
-        string memory _description = service._description;
+        string memory _description = service.description;
 
-        address(_serviceProviderWallet).transfer(service._price);
+        payable(_serviceProviderWallet).transfer(_price);
 
         // Mint a expirable NFT
-        eazyVideoNFTContract.mintNFT(
+        mintNFT(
             _name,
             _ImageUri,
             _description,
+            service.planDuration,
             _time,
             _price,
             msg.sender,
@@ -206,23 +207,28 @@ contract EazyVideo {
         uint256 _amount,
         uint256 _days // _days multiplied by per day amount is total amount
     ) public onlyUser {
-        //User storage seller = users[userToId[_seller]];
+        rentNFT(tokenID, _amount, _days);
     }
 
-    // function getUserAvailablePlans() public returns (Plan calldata) {
-    //     User storage user = users[userToId[msg.sender]];
-    //     return user.availablePlans;
-    // }
+    function getAllServices() public returns (Service[] memory) {
+        return services;
+    }
 
-    // function getUserForLendPlans() public returns (Plan calldata) {
-    //     User storage user = users[userToId[msg.sender]];
-    //     return user.forLendPlans;
-    // }
+    function getAllForRentPlans() public returns (Service[] memory) {
+        Service[] storage temp;
+        for (int256 i = 0; i < users.length; i++) {
+            temp.push(users.forLendPlans);
+        }
+        return temp;
+    }
 
-    // function getUserService() public returns (Service calldata) {
-    //     Service storage serviceProvider = services[
-    //         serviceProviderToId[msg.sender]
-    //     ];
-    //     return serviceProvider;
-    // }
+    function getUserOwnedServices() public returns (Service calldata) {
+        Service storage user = users[userToId[msg.sender]];
+        return users.availablePlans;
+    }
+
+    function getUserLendServices() public returns (Service calldata) {
+        Service storage user = users[userToId[msg.sender]];
+        return users.forLendPlans;
+    }
 }
