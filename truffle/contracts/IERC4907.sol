@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.1;
 
 interface IERC4907 {
     // Logged when the user of a token assigns a new user or updates expires

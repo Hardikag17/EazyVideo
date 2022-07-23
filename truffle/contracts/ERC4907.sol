@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.1;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./IERC4907.sol";
@@ -25,7 +25,7 @@ contract ERC4907 is ERC721, IERC4907 {
         uint256 tokenId,
         address user,
         uint64 expires
-    ) public virtual {
+    ) public virtual override {
         require(
             _isApprovedOrOwner(msg.sender, tokenId),
             "ERC721: transfer caller is not owner nor approved"
@@ -40,7 +40,13 @@ contract ERC4907 is ERC721, IERC4907 {
     /// @dev The zero address indicates that there is no user or the user is expired
     /// @param tokenId The NFT to get the user address for
     /// @return The user address for this NFT
-    function userOf(uint256 tokenId) public view virtual returns (address) {
+    function userOf(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (address)
+    {
         if (uint256(_users[tokenId].expires) >= block.timestamp) {
             return _users[tokenId].user;
         } else {
@@ -56,6 +62,7 @@ contract ERC4907 is ERC721, IERC4907 {
         public
         view
         virtual
+        override
         returns (uint256)
     {
         return _users[tokenId].expires;

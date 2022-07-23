@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.1;
 
 import "./nft.sol";
 
@@ -7,7 +7,7 @@ import "./nft.sol";
  * @notice It is a contract for managing eazyVideo platform
  */
 
-contract EazyVideo {
+contract EazyVideo is eazyVideoNFTContract {
     // For only service providers
 
     struct Service {
@@ -26,7 +26,7 @@ contract EazyVideo {
         Service[] forLendPlans;
     }
 
-    Service[] services;
+    Service[] public services;
     User[] users;
 
     // True for Service provider, False for a User
@@ -76,9 +76,9 @@ contract EazyVideo {
         // USER
         else if (accountType[msg.sender] == false) {
             return "USER";
-        } else {
-            addToPlatform(_accountType);
         }
+        addToPlatform(_accountType);
+        return "Account Created";
     }
 
     function addToPlatform(bool _accountType) internal {
@@ -95,7 +95,7 @@ contract EazyVideo {
         }
         // serviceProvider
         if (_accountType == true) {
-            services[serviceProviderToId[msg.sender]] = services.push(
+            services.push(
                 Service({
                     name: "",
                     ImageUri: "",
@@ -132,7 +132,6 @@ contract EazyVideo {
      * @notice method to buy service from service providers
      */
     function BuyServiceFromServiceProvider(
-        string memory _serviceName,
         address payable _serviceProviderWallet
     ) public payable onlyUser {
         Service storage service = services[
@@ -141,7 +140,7 @@ contract EazyVideo {
 
         string memory _name = service.name;
         string memory _ImageUri = service.ImageUri;
-        uint256 _time = block.timestamp + service.planDuration;
+        uint64 _time = uint64(block.timestamp) + service.planDuration;
         uint256 _price = service.price;
         string memory _description = service.description;
 
@@ -168,25 +167,24 @@ contract EazyVideo {
         uint256 _price,
         uint256 _days,
         string memory _name
-    ) public onlyUser returns (bool) {
+    ) public onlyUser {
         User storage user = users[userToId[msg.sender]];
-        Service storage ForLendPlan;
-        for (int256 i = 0; i < user.availablePlans.length - 1; i++) {
+        Service storage ForLendPlan = user.forLendPlans.push();
+        for (uint256 i = 0; i < user.availablePlans.length - 1; i++) {
             if (strcmp(user.availablePlans[i].name, _name)) {
                 ForLendPlan.price = _price;
-                ForLendPlan.price = _name;
+                ForLendPlan.name = _name;
                 ForLendPlan.ImageUri = user.availablePlans[i].ImageUri;
                 ForLendPlan.description = user.availablePlans[i].description;
-                require(
-                    user.availablePlans[i].endDate <= block.timestamp + _days,
-                    " Can not lend for this many days"
-                );
-                ForLendPlan.duration = _days * 1 days;
-                ForLendPlan.endDate =
-                    (block.timestamp * 1 days) +
-                    ForLendPlan.duration;
+                // require(
+                //     user.availablePlans[i].planDuration <=
+                //         block.timestamp + _days,
+                //     " Can not lend for this many days"
+                // );
+                ForLendPlan.planDuration = uint64(_days);
+
                 if (user.availablePlans.length < 2) {
-                    user.availablePlans.length = 0;
+                    delete user.availablePlans;
                 } else {
                     user.availablePlans[i] = user.availablePlans[
                         user.availablePlans.length - 1
@@ -194,7 +192,6 @@ contract EazyVideo {
                 }
             }
         }
-        user.forLendPlans.push(ForLendPlan);
     }
 
     /**
@@ -203,32 +200,30 @@ contract EazyVideo {
      * the nft owner
      */
     function RentPlan(
-        address tokenID,
+        uint256 tokenID,
         uint256 _amount,
-        uint256 _days // _days multiplied by per day amount is total amount
+        uint64 _days // _days multiplied by per day amount is total amount
     ) public onlyUser {
         rentNFT(tokenID, _amount, _days);
     }
 
-    function getAllServices() public returns (Service[] memory) {
+    function getAllServices() public view returns (Service[] memory) {
         return services;
     }
 
-    function getAllForRentPlans() public returns (Service[] memory) {
-        Service[] storage temp;
-        for (int256 i = 0; i < users.length; i++) {
-            temp.push(users.forLendPlans);
-        }
-        return temp;
+    // function getAllForRentPlans() public returns (Service[] memory) {
+    //     string[] storage temp;
+    //     for (uint256 i = 0; i < users.length; i++) {
+    //         temp.push(users[i].forLendPlans);
+    //     }
+    //     return temp;
+    // }
+
+    function getUserOwnedServices() public view returns (Service[] memory) {
+        return users[userToId[msg.sender]].availablePlans;
     }
 
-    function getUserOwnedServices() public returns (Service calldata) {
-        Service storage user = users[userToId[msg.sender]];
-        return users.availablePlans;
-    }
-
-    function getUserLendServices() public returns (Service calldata) {
-        Service storage user = users[userToId[msg.sender]];
-        return users.forLendPlans;
+    function getUserLendServices() public view returns (Service[] memory) {
+        return users[userToId[msg.sender]].forLendPlans;
     }
 }

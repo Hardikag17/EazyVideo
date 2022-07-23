@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >0.5.2 <=0.8.14;
+pragma solidity ^0.8.1;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -32,6 +32,7 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
     }
 
     mapping(uint256 => NFTItem) private idToNftItem;
+    mapping(address => NFTItem[]) public userNFTItem;
 
     function mintNFT(
         string memory _serviceName,
@@ -47,7 +48,7 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
         tID.increment();
         uint256 tokenID = tID.current();
         _mint(_serviceProvider, tokenID);
-        UpdateUser(tokenID, msg.sender, _endTime);
+        setUser(tokenID, msg.sender, _endTime);
 
         idToNftItem[tokenID] = NFTItem(
             _serviceName,
@@ -59,6 +60,8 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
             payable(_owner),
             payable(_serviceProvider)
         );
+
+        userNFTItem[msg.sender].push(idToNftItem[tokenID]);
     }
 
     function rentNFT(
@@ -66,12 +69,12 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
         uint256 _amount,
         uint64 _days
     ) public payable nonReentrant {
-        UpdateUser(tokenID, msg.sender, _days);
+        setUser(tokenID, msg.sender, _days);
         payable(idToNftItem[tokenID].owner).transfer(_amount);
-        idToNftItem[tokenID].owner = msg.sender;
+        idToNftItem[tokenID].owner = payable(msg.sender);
     }
 
-    function fetchAllNFTItems() public {}
-
-    function fetAllUserNFTItems() public {}
+    function fetchAllUserNFTItems() public view returns (NFTItem[] memory) {
+        return userNFTItem[msg.sender];
+    }
 }
