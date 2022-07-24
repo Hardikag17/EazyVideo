@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { EazyVideoContext } from '../utils/eazyVideoContext';
+import { useRouter } from 'next/router';
+import { EazyVideoContext, initialState } from '../utils/eazyVideoContext';
 
 const Layout = ({ children }) => {
-  // const history = useHistory();
-  // const location = useLocation();
+  const router = useRouter();
 
-  const [state, setState] = useState({
-    account: '',
-    loaded: false,
-    web3: null,
-    NFTContract: null,
-    EazyVideoContract: null,
-  });
+  const [state, setState] = useState(initialState);
 
   useEffect(() => {
-    if (!state.loaded) {
+    if (state.loaded == false) {
       alert('wallet not connected');
-      // history.push('/');
+      router.push('/');
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <EazyVideoContext.Provider value={{ state, setState }}>

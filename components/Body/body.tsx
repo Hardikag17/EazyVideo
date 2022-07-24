@@ -1,19 +1,74 @@
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
+import EazyVideoContract from '../../truffle/abis/EazyVideo.json';
+import SubsNFTContract from '../../truffle/abis/eazyVideoNFTContract.json';
+import { NET_ID, RPC_URL, fetchIpfs } from '../../utils/helpers';
+import Web3 from 'web3';
+import type { AbiItem } from 'web3-utils';
+import type { Contract } from 'web3-eth-contract';
 import { useContext } from 'react';
-import { connectToWallet } from '../../utils/web3Client';
+import { useRouter } from 'next/router';
 export default function Body() {
+  const router = useRouter();
   const { state, setState } = useContext(EazyVideoContext);
 
-  function userConnection() {
-    const account = connectToWallet();
-    console.log('wallet connected');
-    setState({
-      ...state,
-      account: account,
-      loaded: true,
-    });
-    console.log(account);
-  }
+  const connectToWallet = async (_accountType: boolean) => {
+    if (window.ethereum) {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      try {
+        const isUnlocked = await window.ethereum._metamask.isUnlocked();
+        if (!isUnlocked) throw new Error('Wallet Locked!');
+        const web3 = new Web3(window.ethereum);
+        const netId = await web3.eth.net.getId();
+        if (netId !== NET_ID)
+          alert('Wrong network, please switch to the Matic Mumbai testnet!');
+        else {
+          const account = (await web3.eth.getAccounts())[0];
+          const EazyVideoContractAddress =
+            EazyVideoContract.networks[netId].address;
+          const SubsNFTContractAddress =
+            SubsNFTContract.networks[netId].address;
+          const EazyVideo: Contract = new web3.eth.Contract(
+            EazyVideoContract.abi as AbiItem[],
+            EazyVideoContractAddress
+          );
+          const SubsNFT: Contract = new web3.eth.Contract(
+            SubsNFTContract.abi as AbiItem[],
+            SubsNFTContractAddress
+          );
+
+          setState({
+            account: account,
+            walletConnected: true,
+            web3: web3,
+            SubsNFTContract: SubsNFT,
+            EazyVideoContract: EazyVideo,
+            accountType: _accountType,
+          });
+
+          const accountType = await state.EazyVideoContract.methods
+            .login(_accountType)
+            .call({
+              from: state.account,
+            });
+
+          console.log('accountType:', accountType);
+
+          if (accountType.length == 4 && _accountType == false) {
+            router.push('/user');
+          } else if (accountType.length > 6 && _accountType == true) {
+            router.push('/serviceprovider');
+          } else {
+            alert('New Account Created, Login by Signing in again!!');
+          }
+        }
+      } catch (e) {
+        alert(e);
+      }
+    } else {
+      alert('web3 not detected');
+    }
+  };
+
   return (
     <div className=' flex flex-col lg:mx-64 mx-auto lg:my-5 my-24 lg:px-4 lg:w-3/4 w-10/12'>
       <div className=' text-5xl lg:w-3/4 pt-5'>
@@ -24,31 +79,16 @@ export default function Body() {
         ~ Just now watching OTT has become affordable for everyone. Pay only
         when you are using the service
       </div>
-
-      {/* <div className='lg:w-3/4 w-full'>
-        <div className='bg-white flex items-center rounded-lg border-2 border-solid border-grey shadow-xl'>
-          <input
-            className='rounded-l bg-white w-full px-4 text-gray leading-tight focus:outline-none'
-            id='search'
-            type='text'
-            placeholder='Eg: alex'
-          />
-          <button className='text-whiteish rounded-lg border-2 border-solid border-grey focus:outline-none w-24 h-12 flex items-center justify-center'>
-            .eth
-          </button>
-        </div>
-      </div> */}
-
       <div className=' py-10 z-10 w-full'>
         <h1>Choose your profile type</h1>
         <div className='flex flex-row '>
           <button
-            onClick={userConnection}
+            onClick={() => connectToWallet(false)}
             className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
             User
           </button>
           <button
-            onClick={() => {}}
+            onClick={() => connectToWallet(true)}
             className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
             Service Provider
           </button>
