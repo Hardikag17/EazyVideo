@@ -53,12 +53,12 @@ export default function Body() {
 
           console.log('accountType:', accountType);
 
-          if (accountType.length == 4 && _accountType == false) {
+          if (accountType == 0 && _accountType == false) {
             router.push('/user');
-          } else if (accountType.length > 6 && _accountType == true) {
+          } else if (accountType == 1 && _accountType == true) {
             router.push('/serviceprovider');
           } else {
-            alert('New Account Created, Login by Signing in again!!');
+            alert('Something is wrong try selecting right option');
           }
         }
       } catch (e) {

@@ -73,32 +73,33 @@ contract EazyVideo is eazyVideoNFTContract {
         return memcmp(bytes(a), bytes(b));
     }
 
-    function login(bool _accountType) public returns (string memory) {
+    function login(bool _accountType) public returns (uint256) {
         // SERVICE PROVIDER
-        if (accountType[msg.sender] == true) {
-            return "SERVICE PROVIDER";
+        if (accountType[msg.sender] == true && _accountType == true) {
+            return 1;
         }
         // USER
-        else if (accountType[msg.sender] == false) {
-            return "USER";
+        else if (accountType[msg.sender] == false && _accountType == false) {
+            return 0;
         }
-        addToPlatform(_accountType);
-        return "Account Created";
+        // WRONG SELECTION
+        else if (
+            (accountType[msg.sender] == true && _accountType == false) ||
+            (accountType[msg.sender] == false && _accountType == true)
+        ) {
+            return 100;
+        }
+        // NEW TO PLATFORM
+        else {
+            addToPlatform(_accountType);
+            return 2;
+        }
     }
 
     function addToPlatform(bool _accountType) internal {
         accountType[msg.sender] = _accountType;
-        //user
-        if (_accountType == false) {
-            User storage newUser = users.push();
-
-            newUser.availablePlansSize = 0;
-            newUser.forLendPlansSize = 0;
-
-            userToId[msg.sender] = users.length;
-        }
         // serviceProvider
-        if (_accountType == true) {
+        if (_accountType) {
             Service storage newService = services.push();
 
             newService.name = "";
@@ -108,6 +109,15 @@ contract EazyVideo is eazyVideoNFTContract {
             newService.price = 0;
 
             serviceProviderToId[msg.sender] = services.length;
+        }
+        //user
+        else {
+            User storage newUser = users.push();
+
+            newUser.availablePlansSize = 0;
+            newUser.forLendPlansSize = 0;
+
+            userToId[msg.sender] = users.length;
         }
     }
 

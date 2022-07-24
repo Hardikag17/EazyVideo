@@ -97,42 +97,42 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: CC0-1.0\r\npragma solidity ^0.8.1;\r\n\r\nimport \"@openzeppelin/contracts/token/ERC721/ERC721.sol\";\r\n\r\ninterface IERC4907 {\r\n    // Logged when the user of a token assigns a new user or updates expires\r\n    /// @notice Emitted when the `user` of an NFT or the `expires` of the `user` is changed\r\n    /// The zero address for user indicates that there is no user address\r\n    event UpdateUser(\r\n        uint256 indexed tokenId,\r\n        address indexed user,\r\n        uint64 expires\r\n    );\r\n\r\n    /// @notice set the user and expires of a NFT\r\n    /// @dev The zero address indicates there is no user\r\n    /// Throws if `tokenId` is not valid NFT\r\n    /// @param user  The new user of the NFT\r\n    /// @param expires  UNIX timestamp, The new user could use the NFT before expires\r\n    function setUser(\r\n        uint256 tokenId,\r\n        address user,\r\n        uint64 expires\r\n    ) external;\r\n\r\n    /// @notice Get the user address of an NFT\r\n    /// @dev The zero address indicates that there is no user or the user is expired\r\n    /// @param tokenId The NFT to get the user address for\r\n    /// @return The user address for this NFT\r\n    function userOf(uint256 tokenId) external view returns (address);\r\n\r\n    /// @notice Get the user expires of an NFT\r\n    /// @dev The zero value indicates that there is no user\r\n    /// @param tokenId The NFT to get the user expires for\r\n    /// @return The user expires for this NFT\r\n    function userExpires(uint256 tokenId) external view returns (uint256);\r\n}\r\n\r\ncontract ERC4907 is ERC721, IERC4907 {\r\n    struct UserInfo {\r\n        address user; // address of user role\r\n        uint64 expires; // unix timestamp, user expires\r\n    }\r\n\r\n    mapping(uint256 => UserInfo) internal _users;\r\n\r\n    constructor() ERC721(\"eazyVideo\", \"eazy\") {}\r\n\r\n    /// @notice set the user and expires of a NFT\r\n    /// @dev The zero address indicates there is no user\r\n    /// Throws if `tokenId` is not valid NFT\r\n    /// @param user  The new user of the NFT\r\n    /// @param expires  UNIX timestamp, The new user could use the NFT before expires\r\n    function setUser(\r\n        uint256 tokenId,\r\n        address user,\r\n        uint64 expires\r\n    ) public virtual override {\r\n        require(\r\n            _isApprovedOrOwner(msg.sender, tokenId),\r\n            \"ERC721: transfer caller is not owner nor approved\"\r\n        );\r\n        UserInfo storage info = _users[tokenId];\r\n        info.user = user;\r\n        info.expires = expires;\r\n        emit UpdateUser(tokenId, user, expires);\r\n    }\r\n\r\n    /// @notice Get the user address of an NFT\r\n    /// @dev The zero address indicates that there is no user or the user is expired\r\n    /// @param tokenId The NFT to get the user address for\r\n    /// @return The user address for this NFT\r\n    function userOf(uint256 tokenId)\r\n        public\r\n        view\r\n        virtual\r\n        override\r\n        returns (address)\r\n    {\r\n        if (uint256(_users[tokenId].expires) >= block.timestamp) {\r\n            return _users[tokenId].user;\r\n        } else {\r\n            return address(0);\r\n        }\r\n    }\r\n\r\n    /// @notice Get the user expires of an NFT\r\n    /// @dev The zero value indicates that there is no user\r\n    /// @param tokenId The NFT to get the user expires for\r\n    /// @return The user expires for this NFT\r\n    function userExpires(uint256 tokenId)\r\n        public\r\n        view\r\n        virtual\r\n        override\r\n        returns (uint256)\r\n    {\r\n        return _users[tokenId].expires;\r\n    }\r\n\r\n    /// @dev See {IERC165-supportsInterface}.\r\n    function supportsInterface(bytes4 interfaceId)\r\n        public\r\n        view\r\n        virtual\r\n        override\r\n        returns (bool)\r\n    {\r\n        return\r\n            interfaceId == type(IERC4907).interfaceId ||\r\n            super.supportsInterface(interfaceId);\r\n    }\r\n\r\n    function _beforeTokenTransfer(\r\n        address from,\r\n        address to,\r\n        uint256 tokenId\r\n    ) internal virtual override {\r\n        super._beforeTokenTransfer(from, to, tokenId);\r\n\r\n        if (from != to && _users[tokenId].user != address(0)) {\r\n            delete _users[tokenId];\r\n            emit UpdateUser(tokenId, address(0), 0);\r\n        }\r\n    }\r\n}\r\n",
-  "sourcePath": "C:\\Users\\hardi\\Desktop\\EazyVideo\\truffle\\contracts\\ERC4907.sol",
+  "sourcePath": "C:/Users/hardi/Desktop/EazyVideo/truffle/contracts/ERC4907.sol",
   "ast": {
     "absolutePath": "/C/Users/hardi/Desktop/EazyVideo/truffle/contracts/ERC4907.sol",
     "exportedSymbols": {
       "Address": [
-        2269
+        1548
       ],
       "Context": [
-        2291
+        1570
       ],
       "ERC165": [
-        2615
+        1820
       ],
       "ERC4907": [
         225
       ],
       "ERC721": [
-        1813
+        1092
       ],
       "IERC165": [
-        2627
+        1832
       ],
       "IERC4907": [
         38
       ],
       "IERC721": [
-        1929
+        1208
       ],
       "IERC721Metadata": [
-        1974
+        1253
       ],
       "IERC721Receiver": [
-        1947
+        1226
       ],
       "Strings": [
-        2591
+        1796
       ]
     },
     "id": 226,
@@ -157,7 +157,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 226,
-        "sourceUnit": 1814,
+        "sourceUnit": 1093,
         "src": "64:57:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -590,7 +590,7 @@
               "id": 39,
               "name": "ERC721",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1813,
+              "referencedDeclaration": 1092,
               "src": "1549:6:0"
             },
             "id": 40,
@@ -617,12 +617,12 @@
         "linearizedBaseContracts": [
           225,
           38,
-          1813,
-          1974,
-          1929,
-          2615,
-          2627,
-          2291
+          1092,
+          1253,
+          1208,
+          1820,
+          1832,
+          1570
         ],
         "name": "ERC4907",
         "nameLocation": "1538:7:0",
@@ -800,7 +800,7 @@
                   "id": 54,
                   "name": "ERC721",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1813,
+                  "referencedDeclaration": 1092,
                   "src": "1776:6:0"
                 },
                 "nodeType": "ModifierInvocation",
@@ -896,7 +896,7 @@
                           "name": "_isApprovedOrOwner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1413,
+                          "referencedDeclaration": 692,
                           "src": "2257:18:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1938,7 +1938,7 @@
           },
           {
             "baseFunctions": [
-              1040
+              319
             ],
             "body": {
               "id": 175,
@@ -2091,7 +2091,7 @@
                         "lValueRequested": false,
                         "memberName": "supportsInterface",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 1040,
+                        "referencedDeclaration": 319,
                         "src": "3792:23:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_view$_t_bytes4_$returns$_t_bool_$",
@@ -2222,7 +2222,7 @@
           },
           {
             "baseFunctions": [
-              1801
+              1080
             ],
             "body": {
               "id": 223,
@@ -2303,7 +2303,7 @@
                       "lValueRequested": false,
                       "memberName": "_beforeTokenTransfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1801,
+                      "referencedDeclaration": 1080,
                       "src": "3988:26:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -2854,37 +2854,37 @@
     "absolutePath": "/C/Users/hardi/Desktop/EazyVideo/truffle/contracts/ERC4907.sol",
     "exportedSymbols": {
       "Address": [
-        2269
+        1548
       ],
       "Context": [
-        2291
+        1570
       ],
       "ERC165": [
-        2615
+        1820
       ],
       "ERC4907": [
         225
       ],
       "ERC721": [
-        1813
+        1092
       ],
       "IERC165": [
-        2627
+        1832
       ],
       "IERC4907": [
         38
       ],
       "IERC721": [
-        1929
+        1208
       ],
       "IERC721Metadata": [
-        1974
+        1253
       ],
       "IERC721Receiver": [
-        1947
+        1226
       ],
       "Strings": [
-        2591
+        1796
       ]
     },
     "id": 226,
@@ -2909,7 +2909,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 226,
-        "sourceUnit": 1814,
+        "sourceUnit": 1093,
         "src": "64:57:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3342,7 +3342,7 @@
               "id": 39,
               "name": "ERC721",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1813,
+              "referencedDeclaration": 1092,
               "src": "1549:6:0"
             },
             "id": 40,
@@ -3369,12 +3369,12 @@
         "linearizedBaseContracts": [
           225,
           38,
-          1813,
-          1974,
-          1929,
-          2615,
-          2627,
-          2291
+          1092,
+          1253,
+          1208,
+          1820,
+          1832,
+          1570
         ],
         "name": "ERC4907",
         "nameLocation": "1538:7:0",
@@ -3552,7 +3552,7 @@
                   "id": 54,
                   "name": "ERC721",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1813,
+                  "referencedDeclaration": 1092,
                   "src": "1776:6:0"
                 },
                 "nodeType": "ModifierInvocation",
@@ -3648,7 +3648,7 @@
                           "name": "_isApprovedOrOwner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1413,
+                          "referencedDeclaration": 692,
                           "src": "2257:18:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -4690,7 +4690,7 @@
           },
           {
             "baseFunctions": [
-              1040
+              319
             ],
             "body": {
               "id": 175,
@@ -4843,7 +4843,7 @@
                         "lValueRequested": false,
                         "memberName": "supportsInterface",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 1040,
+                        "referencedDeclaration": 319,
                         "src": "3792:23:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_view$_t_bytes4_$returns$_t_bool_$",
@@ -4974,7 +4974,7 @@
           },
           {
             "baseFunctions": [
-              1801
+              1080
             ],
             "body": {
               "id": 223,
@@ -5055,7 +5055,7 @@
                       "lValueRequested": false,
                       "memberName": "_beforeTokenTransfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1801,
+                      "referencedDeclaration": 1080,
                       "src": "3988:26:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -5608,7 +5608,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.0",
-  "updatedAt": "2022-07-24T16:11:41.564Z",
+  "updatedAt": "2022-07-24T20:52:27.987Z",
   "devdoc": {
     "kind": "dev",
     "methods": {
