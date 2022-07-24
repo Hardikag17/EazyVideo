@@ -16,8 +16,11 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
 
     Counters.Counter public totalTokensMinted;
 
-    constructor() ERC4907("eazyVideo", "eazy") {
+    address private ERC4907ContractAddress;
+
+    constructor(address _ERC4907ContractAddress) ERC4907() {
         owner = payable(msg.sender);
+        ERC4907ContractAddress = _ERC4907ContractAddress;
     }
 
     struct NFTItem {

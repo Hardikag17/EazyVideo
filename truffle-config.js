@@ -9,7 +9,6 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, 'truffle/abis'),
   contracts_directory: path.join(__dirname, 'truffle/contracts'),
   migrations_directory: path.join(__dirname, 'truffle/migrations'),
-  test_directory: path.join(__dirname, 'truffle/test'),
   networks: {
     development: {
       host: '127.0.0.1', // Localhost (default: none)
@@ -21,6 +20,16 @@ module.exports = {
         return new HDWalletProvider(mnemonic, url);
       },
       network_id: '80001',
+    },
+    rinkeby: {
+      provider: () => {
+        return new HDWalletProvider(
+          mnemonic,
+          `https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`
+        );
+      },
+      network_id: '4',
+      skipDryRun: true,
     },
   },
   compilers: {

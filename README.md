@@ -1,34 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## SUBSCRIPTION VIA NFT’S
 
-## Getting Started
+## About the project:-
 
-First, run the development server:
+The project facilitates the user to buy or rent subscriptions of several online streaming platform (OTT’s) under one roof via NFT’s for a custom amount of time.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Buy: Buy the OTT service directly from a service provider.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Rent: While the user is not using his/her subscription package, user can lend it to other users willing to rent/watch by sharing the time bounded decaying nft. This way user can make extensive use of the membership and also monetize on it if user is not using it personally by renting it on the platform.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Adding the OTT service: To add your OTT service organization can verify few checks using their social profiles and register their service for user’s to buy.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Problem statement
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Usually whenever we take subscription from any OTT platform we often use it only 5-10% of time we subscribe for, but we ends up paying for the whole lot amount of time, this is where our platform XYZ comes.
 
-## Learn More
+## Our Solution
 
-To learn more about Next.js, take a look at the following resources:
+Using XYZ platform anyone can rent out their OTT subscriptions while they are not using it and monetize on it. User can take subscriptions for whatever time they like by making customised plans. All of this would be done by using decaying NFTs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Snips
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Future Aspects
 
-## Deploy on Vercel
+- Users get an option to renew the same NFT with an amount which is less then buying a new one. They get this pop-up a day before expiration.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technology used
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+IPFS, Pinata, Spheron, Hardhat, Polygon, Web3.js, Solidity, Nextjs, Tailwind css
+
+## How to run the project
+
+## Smart Contracts
+
+## Video Explaination
+
+## Contracts
+
+- ERC4907: 0xA11eD9a41822d48709c50904d5aE6a0b497172e9
+- SubsNFT: 0x500DEDaBC7193c1Bc74A21F5fA1fB058D8663d54
+- EazyVideo: 0x98B97186af33a8F473cE027E1e13C0f3c2E3059C

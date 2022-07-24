@@ -1,15 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import "./nft.sol";
+import "./SubsNFT.sol";
 
 /** @title eazyVideo
  * @notice It is a contract for managing eazyVideo platform
  */
 
 contract EazyVideo is eazyVideoNFTContract {
-    // For only service providers
+    constructor(address _ERC4907ContractAddress)
+        eazyVideoNFTContract(_ERC4907ContractAddress)
+    {}
 
+    // For only service providers
     struct Service {
         string name;
         string ImageUri;
