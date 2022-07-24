@@ -21,9 +21,11 @@ contract EazyVideo is eazyVideoNFTContract {
     // For user type
     struct User {
         // Plan nfts of users
-        Service[] availablePlans;
+        mapping(uint256 => Service) availablePlans;
+        uint256 availablePlansSize;
         // For Lend nfts of users that are available for rent for a specific time.
-        Service[] forLendPlans;
+        mapping(uint256 => Service) forLendPlans;
+        uint256 forLendPlansSize;
     }
 
     Service[] public services;
@@ -85,25 +87,23 @@ contract EazyVideo is eazyVideoNFTContract {
         accountType[msg.sender] = _accountType;
         //user
         if (_accountType == false) {
-            users.push(
-                User({
-                    availablePlans: new Service[](0),
-                    forLendPlans: new Service[](0)
-                })
-            );
+            User storage newUser = users.push();
+
+            newUser.availablePlansSize = 0;
+            newUser.forLendPlansSize = 0;
+
             userToId[msg.sender] = users.length;
         }
         // serviceProvider
         if (_accountType == true) {
-            services.push(
-                Service({
-                    name: "",
-                    ImageUri: "",
-                    description: "",
-                    planDuration: 0,
-                    price: 0
-                })
-            );
+            Service storage newService = services.push();
+
+            newService.name = "";
+            newService.ImageUri = "";
+            newService.description = "";
+            newService.planDuration = 0;
+            newService.price = 0;
+
             serviceProviderToId[msg.sender] = services.length;
         }
     }
@@ -169,27 +169,18 @@ contract EazyVideo is eazyVideoNFTContract {
         string memory _name
     ) public onlyUser {
         User storage user = users[userToId[msg.sender]];
-        Service storage ForLendPlan = user.forLendPlans.push();
-        for (uint256 i = 0; i < user.availablePlans.length - 1; i++) {
-            if (strcmp(user.availablePlans[i].name, _name)) {
-                ForLendPlan.price = _price;
-                ForLendPlan.name = _name;
-                ForLendPlan.ImageUri = user.availablePlans[i].ImageUri;
-                ForLendPlan.description = user.availablePlans[i].description;
-                // require(
-                //     user.availablePlans[i].planDuration <=
-                //         block.timestamp + _days,
-                //     " Can not lend for this many days"
-                // );
-                ForLendPlan.planDuration = uint64(_days);
 
-                if (user.availablePlans.length < 2) {
-                    delete user.availablePlans;
-                } else {
-                    user.availablePlans[i] = user.availablePlans[
-                        user.availablePlans.length - 1
-                    ];
-                }
+        for (uint256 i = 0; i < user.availablePlansSize - 1; i++) {
+            if (strcmp(user.availablePlans[i].name, _name)) {
+                user.forLendPlans[user.forLendPlansSize] = Service({
+                    price: _price,
+                    name: _name,
+                    ImageUri: user.availablePlans[i].ImageUri,
+                    description: user.availablePlans[i].description,
+                    planDuration: uint64(_days)
+                });
+
+                // delete from available plans
             }
         }
     }
@@ -205,25 +196,5 @@ contract EazyVideo is eazyVideoNFTContract {
         uint64 _days // _days multiplied by per day amount is total amount
     ) public onlyUser {
         rentNFT(tokenID, _amount, _days);
-    }
-
-    function getAllServices() public view returns (Service[] memory) {
-        return services;
-    }
-
-    // function getAllForRentPlans() public returns (Service[] memory) {
-    //     string[] storage temp;
-    //     for (uint256 i = 0; i < users.length; i++) {
-    //         temp.push(users[i].forLendPlans);
-    //     }
-    //     return temp;
-    // }
-
-    function getUserOwnedServices() public view returns (Service[] memory) {
-        return users[userToId[msg.sender]].availablePlans;
-    }
-
-    function getUserLendServices() public view returns (Service[] memory) {
-        return users[userToId[msg.sender]].forLendPlans;
     }
 }
