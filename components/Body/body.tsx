@@ -56,7 +56,7 @@ export default function Body() {
           if (accountType == 0) {
             var addToPlatform = await state.EazyVideoContract.methods
               .addToPlatform(_accountType)
-              .call({
+              .send({
                 from: state.account,
               });
 

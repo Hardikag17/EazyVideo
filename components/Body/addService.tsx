@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { addService } from '../../utils/web3Client';
+// import { addService } from '../../utils/web3Client';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
@@ -48,6 +48,10 @@ export default function AddService() {
     } catch (error) {
       console.log('Error uploading file: ', error);
     }
+  }
+
+  async function addService(url: string) {
+    
   }
 
   return (
