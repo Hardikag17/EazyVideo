@@ -27,11 +27,11 @@ export default function Body() {
             EazyVideoContract.networks[netId].address;
           const SubsNFTContractAddress =
             SubsNFTContract.networks[netId].address;
-          const EazyVideo: Contract = new web3.eth.Contract(
+          const EazyVideo = new web3.eth.Contract(
             EazyVideoContract.abi as AbiItem[],
             EazyVideoContractAddress
           );
-          const SubsNFT: Contract = new web3.eth.Contract(
+          const SubsNFT = new web3.eth.Contract(
             SubsNFTContract.abi as AbiItem[],
             SubsNFTContractAddress
           );
@@ -44,6 +44,8 @@ export default function Body() {
             EazyVideoContract: EazyVideo,
             accountType: _accountType,
           });
+
+          console.log('account:', state.account);
 
           var accountType = await state.EazyVideoContract.methods
             .getAccountType()

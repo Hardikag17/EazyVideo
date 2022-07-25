@@ -1,16 +1,18 @@
-import { useState } from 'react';
-// import { addService } from '../../utils/web3Client';
+import { useState, useContext } from 'react';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
+import { EazyVideoContext } from '../../utils/eazyVideoContext';
+
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
 export default function AddService() {
   const [fileUrl, setFileUrl] = useState(null);
+  const { state } = useContext(EazyVideoContext);
 
   const [formInput, updateFormInput] = useState({
-    perDayPrice: '',
+    perDayPrice: null,
     name: '',
     description: '',
-    duration: '',
+    duration: null,
   });
 
   async function onChange(e) {
@@ -28,8 +30,9 @@ export default function AddService() {
     }
   }
 
-  async function createService() {
+  const createService = async () => {
     console.log('button clicked');
+    console.log(state.account);
     const { perDayPrice, name, description, duration } = formInput;
     if (!name || !description || !perDayPrice || !fileUrl) return;
     const data = JSON.stringify({
@@ -48,10 +51,26 @@ export default function AddService() {
     } catch (error) {
       console.log('Error uploading file: ', error);
     }
-  }
+  };
+
+  console.log('EazyVideoContract', state.EazyVideoContract);
 
   async function addService(url: string) {
-    
+    try {
+      await state.EazyVideoContract.methods
+        .updateService(
+          formInput.name,
+          url,
+          formInput.description,
+          formInput.duration,
+          formInput.perDayPrice
+        )
+        .send({
+          from: state.account,
+        });
+    } catch (error) {
+      console.log('error:', error);
+    }
   }
 
   return (
@@ -133,9 +152,7 @@ export default function AddService() {
       </div>
       <div className=' py-10'>
         <button
-          onClick={() => {
-            createService;
-          }}
+          onClick={createService}
           className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
           Add
         </button>
