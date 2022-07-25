@@ -1,14 +1,24 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
 import Navbar from '../components/Navbar/navbar';
 import Footer from '../components/Footer/footer';
 import Service from '../components/User/BuyCard';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import LendCard from '../components/User/LendCard';
 import RentCard from '../components/User/RentCard';
 
+import { EazyVideoContext } from '../utils/eazyVideoContext';
+
 export default function User() {
   const [link, setLink] = useState(<Service />);
+  const { state } = useContext(EazyVideoContext);
+
+  const Bag = async () => {
+    console.log('fetch user services');
+    try {
+      if (!state.walletConnected) throw new Error('Not connected to wallet');
+    } catch (e) {
+      alert(e);
+    }
+  };
 
   return (
     <div className=' h-screen'>

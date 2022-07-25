@@ -11,7 +11,7 @@ export default function Body() {
   const router = useRouter();
   const { state, setState } = useContext(EazyVideoContext);
 
-  const connectToWallet = async (_accountType: boolean) => {
+  const connectToWallet = async (_accountType: number) => {
     if (window.ethereum) {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       try {
@@ -45,20 +45,29 @@ export default function Body() {
             accountType: _accountType,
           });
 
-          const accountType = await state.EazyVideoContract.methods
-            .login(_accountType)
+          var accountType = await state.EazyVideoContract.methods
+            .getAccountType()
             .call({
               from: state.account,
             });
 
           console.log('accountType:', accountType);
 
-          if (accountType == 0 && _accountType == false) {
+          if (accountType == 0) {
+            var addToPlatform = await state.EazyVideoContract.methods
+              .addToPlatform(_accountType)
+              .call({
+                from: state.account,
+              });
+
+            console.log('New Account Type:', addToPlatform);
+          }
+          if (accountType == 1) {
             router.push('/user');
-          } else if (accountType == 1 && _accountType == true) {
+          } else if (accountType == 2) {
             router.push('/serviceprovider');
           } else {
-            alert('Something is wrong try selecting right option');
+            alert('Try again!!');
           }
         }
       } catch (e) {
@@ -83,12 +92,12 @@ export default function Body() {
         <h1>Choose your profile type</h1>
         <div className='flex flex-row '>
           <button
-            onClick={() => connectToWallet(false)}
+            onClick={() => connectToWallet(1)}
             className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
             User
           </button>
           <button
-            onClick={() => connectToWallet(true)}
+            onClick={() => connectToWallet(2)}
             className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
             Service Provider
           </button>

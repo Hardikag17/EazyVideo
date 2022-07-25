@@ -35,27 +35,11 @@ contract EazyVideo is eazyVideoNFTContract {
     User[] users;
 
     // True for Service provider, False for a User
-    mapping(address => bool) public accountType;
+    mapping(address => uint256) public accountType;
     // user wallet address to user array index
     mapping(address => uint256) internal userToId;
     //service provider wallet address to index in services array
     mapping(address => uint256) internal serviceProviderToId;
-
-    /**
-     * @notice modifier to check if user is valid
-     */
-    modifier onlyUser() {
-        require(accountType[msg.sender] == false, "Not a user");
-        _;
-    }
-
-    /**
-     * @notice modifier to check if service provider is valid
-     */
-    modifier onlyServiceProvider() {
-        require(accountType[msg.sender] == true, "Not a service Provider");
-        _;
-    }
 
     function memcmp(bytes memory a, bytes memory b)
         internal
@@ -73,33 +57,34 @@ contract EazyVideo is eazyVideoNFTContract {
         return memcmp(bytes(a), bytes(b));
     }
 
-    function login(bool _accountType) public returns (uint256) {
-        // SERVICE PROVIDER
-        if (accountType[msg.sender] == true && _accountType == true) {
-            return 1;
-        }
-        // USER
-        else if (accountType[msg.sender] == false && _accountType == false) {
-            return 0;
-        }
-        // WRONG SELECTION
-        else if (
-            (accountType[msg.sender] == true && _accountType == false) ||
-            (accountType[msg.sender] == false && _accountType == true)
-        ) {
-            return 100;
-        }
-        // NEW TO PLATFORM
-        else {
-            addToPlatform(_accountType);
-            return 2;
-        }
+    /**
+     * @notice modifier to check if user is valid
+     */
+    modifier onlyUser() {
+        require(accountType[msg.sender] == 1, "Not a user");
+        _;
     }
 
-    function addToPlatform(bool _accountType) internal {
+    /**
+     * @notice modifier to check if service provider is valid
+     */
+    modifier onlyServiceProvider() {
+        require(accountType[msg.sender] == 2, "Not a service Provider");
+        _;
+    }
+
+    function getAccountType() public view returns (uint256) {
+        return accountType[msg.sender];
+    }
+
+    function addToPlatform(uint256 _accountType)
+        public
+        returns (string memory)
+    {
+        require(getAccountType() == 0, "YOU ARE ALREADY REGISTERED");
         accountType[msg.sender] = _accountType;
         // serviceProvider
-        if (_accountType) {
+        if (accountType[msg.sender] == 2) {
             Service storage newService = services.push();
 
             newService.name = "";
@@ -109,6 +94,7 @@ contract EazyVideo is eazyVideoNFTContract {
             newService.price = 0;
 
             serviceProviderToId[msg.sender] = services.length;
+            return "NEW SERVICE PROVIDER ADDED";
         }
         //user
         else {
@@ -118,6 +104,7 @@ contract EazyVideo is eazyVideoNFTContract {
             newUser.forLendPlansSize = 0;
 
             userToId[msg.sender] = users.length;
+            return "NEW USER ADDED";
         }
     }
 
@@ -127,11 +114,7 @@ contract EazyVideo is eazyVideoNFTContract {
         string memory _description,
         uint64 _planDuration,
         uint256 _planPrice
-    ) public {
-        require(
-            accountType[msg.sender],
-            "You are not a registered service provider"
-        );
+    ) public onlyServiceProvider {
         services[serviceProviderToId[msg.sender]] = Service({
             name: _name,
             ImageUri: _ImageUri,
