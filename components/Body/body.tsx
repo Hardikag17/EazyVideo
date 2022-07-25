@@ -61,6 +61,12 @@ export default function Body() {
               });
 
             console.log('New Account Type:', addToPlatform);
+
+            accountType = await state.EazyVideoContract.methods
+              .getAccountType()
+              .call({
+                from: state.account,
+              });
           }
           if (accountType == 1) {
             router.push('/user');
