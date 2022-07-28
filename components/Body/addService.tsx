@@ -1,7 +1,10 @@
 import { useState, useContext } from 'react';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
-
+import { NET_ID } from '../../utils/helpers';
+import EazyVideoContract from '../../truffle/abis/EazyVideo.json';
+import Web3 from 'web3';
+import type { AbiItem } from 'web3-utils';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
 export default function AddService() {
@@ -57,6 +60,42 @@ export default function AddService() {
 
   async function addService(url: string) {
     try {
+      if (!state.walletConnected) throw new Error('Not connected to wallet');
+      // const web3 = new Web3(
+      //   `https://polygon-mumbai.g.alchemy.com/v2/ocBah5MKMs4sRRNA0G_qXaj86t6Cxf_B`
+      // );
+      // let contractinstance = new web3.eth.Contract(
+      //   EazyVideoContract.abi as AbiItem[],
+      //   `0x98923f7bd7caa9bf1bcf61a2a3fa8d60cb260e0a`
+      // );
+      // const tx = contractinstance.methods.updateService(
+      //   formInput.name,
+      //   url,
+      //   formInput.description,
+      //   formInput.duration,
+      //   formInput.perDayPrice
+      // );
+      // const data = tx.encodeABI();
+      // const nonce =
+      //   (await state.web3.eth.getTransactionCount(state.account)) + 1;
+      // const signedTx = await state.web3.eth.accounts.signTransaction(
+      //   {
+      //     to: `0x98923f7bd7caa9bf1bcf61a2a3fa8d60cb260e0a`,
+      //     data,
+      //     gas: 12000000,
+      //     gasPrice: 20000000000,
+      //     nonce,
+      //     chainId: 80001,
+      //   },
+      //   `53646dffbe16c65e9920c48791d2918c1d2262ffdfca90d789eff426150b7193`
+      // );
+      // const receipt = await state.web3.eth.sendSignedTransaction(
+      //   signedTx.rawTransaction
+      // );
+      // console.log(receipt);
+      const nonce =
+        (await state.web3.eth.getTransactionCount(state.account)) + 1;
+
       await state.EazyVideoContract.methods
         .updateService(
           formInput.name,
@@ -67,6 +106,8 @@ export default function AddService() {
         )
         .send({
           from: state.account,
+          to: `0x98923f7bd7caa9bf1bcf61a2a3fa8d60cb260e0a`,
+          nonce,
         });
     } catch (error) {
       console.log('error:', error);

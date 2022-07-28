@@ -1,5 +1,31 @@
 import Image from 'next/image';
+import { useState, useContext, useEffect } from 'react';
+import { EazyVideoContext } from '../../utils/eazyVideoContext';
 export default function ServiceCard() {
+  const { state } = useContext(EazyVideoContext);
+
+  console.log(state.EazyVideoContract);
+
+  useEffect(() => {
+    loadService();
+  });
+  async function loadService() {
+    try {
+      // var sevicesProviderID = await state.EazyVideoContract.methods
+      //   .serviceProviderToId(state.account)
+      //   .call({
+      //     from: state.account,
+      //   });
+      // console.log('sevicesProviderID:', sevicesProviderID);
+      var services = await state.EazyVideoContract.methods.services.call({
+        from: state.account,
+      });
+      console.log('services:', services);
+    } catch (error) {
+      console.log('error:', error);
+    }
+  }
+
   return (
     <div
       className={`container w-full text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row `}>

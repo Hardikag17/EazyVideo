@@ -39,7 +39,7 @@ contract EazyVideo is eazyVideoNFTContract {
     // user wallet address to user array index
     mapping(address => uint256) internal userToId;
     //service provider wallet address to index in services array
-    mapping(address => uint256) internal serviceProviderToId;
+    mapping(address => uint256) public serviceProviderToId;
 
     function memcmp(bytes memory a, bytes memory b)
         internal
@@ -93,7 +93,7 @@ contract EazyVideo is eazyVideoNFTContract {
             newService.planDuration = 0;
             newService.price = 0;
 
-            serviceProviderToId[msg.sender] = services.length;
+            serviceProviderToId[msg.sender] = services.length - 1;
             return "NEW SERVICE PROVIDER ADDED";
         }
         //user
@@ -103,32 +103,36 @@ contract EazyVideo is eazyVideoNFTContract {
             newUser.availablePlansSize = 0;
             newUser.forLendPlansSize = 0;
 
-            userToId[msg.sender] = users.length;
+            userToId[msg.sender] = users.length - 1;
             return "NEW USER ADDED";
         }
     }
 
-    function updateService(
+    function updateServiceName(
         string memory _name,
         string memory _ImageUri,
         string memory _description,
         uint64 _planDuration,
         uint256 _planPrice
-    ) public onlyServiceProvider {
-        services[serviceProviderToId[msg.sender]] = Service({
-            name: _name,
-            ImageUri: _ImageUri,
-            description: _description,
-            planDuration: _planDuration,
-            price: _planPrice
-        });
+    ) public onlyServiceProvider returns (bool) {
+        Service storage service = services[serviceProviderToId[msg.sender]];
+
+        service.name =  _name;
+        service.ImageUri =  _ImageUri;
+        service.description =  _description;
+        service.planDuration =  _planDuration;
+        service.price= _planPrice;
+
+        return true;
+    
     }
+
 
     /**
      * @notice method to buy service from service providers
      */
     function BuyServiceFromServiceProvider(
-        address payable _serviceProviderWallet
+        address _serviceProviderWallet
     ) public payable onlyUser {
         Service storage service = services[
             serviceProviderToId[_serviceProviderWallet]
@@ -143,16 +147,16 @@ contract EazyVideo is eazyVideoNFTContract {
         payable(_serviceProviderWallet).transfer(_price);
 
         // Mint a expirable NFT
-        mintNFT(
-            _name,
-            _ImageUri,
-            _description,
-            service.planDuration,
-            _time,
-            _price,
-            msg.sender,
-            _serviceProviderWallet
-        );
+        // mintNFT(
+        //     _name,
+        //     _ImageUri,
+        //     _description,
+        //     service.planDuration,
+        //     _time,
+        //     _price,
+        //     msg.sender,
+        //     _serviceProviderWallet
+        // );
     }
 
     /**
