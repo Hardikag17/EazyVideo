@@ -8,7 +8,7 @@ import "./ERC4907.sol";
 contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
     using Counters for Counters.Counter;
 
-    address owner;
+    address payable owner;
 
     mapping(uint256 => address payable) nftOwner;
 
@@ -18,9 +18,8 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
 
     address private ERC4907ContractAddress;
 
-    constructor(address _ERC4907ContractAddress) ERC4907() {
+    constructor() ERC4907() {
         owner = payable(msg.sender);
-        ERC4907ContractAddress = _ERC4907ContractAddress;
     }
 
     struct NFTItem {
@@ -31,10 +30,10 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
         uint64 endTime;
         uint256 price;
         address payable owner;
-        address payable srviceProvider;
+        address payable serviceProvider;
     }
 
-    mapping(uint256 => NFTItem) private idToNftItem;
+    mapping(uint256 => NFTItem) public idToNftItem;
     mapping(address => NFTItem[]) public userNFTItem;
 
     function mintNFT(
@@ -46,11 +45,14 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
         uint256 _price,
         address _owner,
         address _serviceProvider
-    ) public payable nonReentrant {
+    ) public nonReentrant {
         require(_price > 0, "Price must be at least 1 wei");
         tID.increment();
         uint256 tokenID = tID.current();
-        _mint(_serviceProvider, tokenID);
+
+        // Service provider approveforAll allow msg.sender 
+
+        _mint(owner, tokenID);
         setUser(tokenID, msg.sender, _endTime);
 
         idToNftItem[tokenID] = NFTItem(
@@ -69,9 +71,9 @@ contract eazyVideoNFTContract is ERC4907, ReentrancyGuard {
 
     function rentNFT(
         uint256 tokenID,
-        uint256 _amount,
-        uint64 _days
-    ) public payable nonReentrant {
+        uint64 _days,
+        uint256 _amount
+    ) public payable {
         setUser(tokenID, msg.sender, _days);
         payable(idToNftItem[tokenID].owner).transfer(_amount);
         idToNftItem[tokenID].owner = payable(msg.sender);

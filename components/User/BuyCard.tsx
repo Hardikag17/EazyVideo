@@ -1,5 +1,15 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 export default function BuyCard() {
+  const [services, setServices] = useState([]);
+  useEffect(() => {
+    loadServices();
+  });
+
+  const loadServices = async () => {
+    // load Number of services
+    // call a loop to services array for all services index
+  };
   return (
     <div
       className={`container w-full text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row `}>

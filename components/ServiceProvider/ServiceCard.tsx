@@ -1,30 +1,30 @@
 import Image from 'next/image';
+import Router from 'next/router';
 import { useState, useContext, useEffect } from 'react';
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
 export default function ServiceCard() {
   const { state } = useContext(EazyVideoContext);
+  const [service, setService] = useState([]);
 
   console.log(state.EazyVideoContract);
 
   useEffect(() => {
     loadService();
   });
-  async function loadService() {
+  const loadService = async () => {
     try {
-      // var sevicesProviderID = await state.EazyVideoContract.methods
-      //   .serviceProviderToId(state.account)
-      //   .call({
-      //     from: state.account,
-      //   });
-      // console.log('sevicesProviderID:', sevicesProviderID);
-      var services = await state.EazyVideoContract.methods.services.call({
-        from: state.account,
-      });
-      console.log('services:', services);
+      var service = await state.EazyVideoContract.methods
+        .getServiceByAddress()
+        .call({
+          from: state.account,
+        });
+
+      console.log('services:', service);
+      setService(service);
     } catch (error) {
       console.log('error:', error);
     }
-  }
+  };
 
   return (
     <div
@@ -33,7 +33,6 @@ export default function ServiceCard() {
         {/* <Image
           className='pt-5'
           src={}
-          blurDataURL='/assets/TurtlePlaceholder.png'
           alt='placeholder'
           width={220}
           height={240}
@@ -45,14 +44,6 @@ export default function ServiceCard() {
         <h5 className='text-left text-xl'>Description</h5>
         <h5 className='text-left text-xl'>Duration</h5>
         <h5 className='text-left text-xl'>Price</h5>
-      </div>
-      <div className=' flex flex-col w-full'>
-        <div className='px-1 py-1 mb-5 w-2/4 h-10 mx-auto flex flex-row bg-purple hover:brightness-105 hover:scale-105 rounded-full items-center justify-center'>
-          <button className='inline-block text-white'>Delete</button>
-        </div>
-        <div className='px-1 py-1 w-2/4 h-10 mx-auto flex flex-row bg-purple hover:brightness-105 hover:scale-105 rounded-full items-center justify-center'>
-          <button className='inline-block text-white'>Update</button>
-        </div>
       </div>
     </div>
   );
