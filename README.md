@@ -1,5 +1,8 @@
 # EazyVideo
+
 > EazyVideo facilitates the user to buy or rent subscriptions of several online streaming platform (OTT’s) under one roof via NFT’s for a custom amount of time.
+
+![image](https://user-images.githubusercontent.com/54525688/181534177-2dca1ea3-e51c-497a-be3e-75941c61f4e8.png)
 
 <br />
 
@@ -15,13 +18,15 @@ Using XYZ platform anyone can rent out their OTT subscriptions while they are no
 
 ✔️ NFT based subscription makes it easy for service providers to vaildate the user identity, otherwise users keep sharing their passwords with thier friends and family.
 
-✔️ While the user is not using his/her subscription package, user can lend it to other users willing to rent/watch by sharing the time bounded decaying nft. This way user can make extensive use of the membership and also monetize on it if user is not using it personally by renting it on the platform. 
+✔️ While the user is not using his/her subscription package, user can lend it to other users willing to rent/watch by sharing the time bounded decaying nft. This way user can make extensive use of the membership and also monetize on it if user is not using it personally by renting it on the platform.
 
 ## 💻 Track we have worked on
-*NFT, Art & Gaming*
+
+_NFT, Art & Gaming_
 
 ## 💻 Bouties we have worked on
-*IPFS Filecoin Bounty:* User's OTT services NFT is being uploaded on IPFS network
+
+_IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS network
 
 ## ⬇️ Services provided by the project
 
@@ -30,7 +35,6 @@ Using XYZ platform anyone can rent out their OTT subscriptions while they are no
 **Rent:** Rent the user's services for `x` amount of day by paying the `price per day` in matic tokens
 
 **Adding the OTT service:** To add your OTT service organization can verify few checks using their social profiles and register their service for user’s to buy.
-
 
 ## Snips
 
@@ -69,6 +73,7 @@ npm install -g truffle
 ```
 
 Please make sure that the Metamask wallet is connected to the `Polygon Mumbai Testnet` and has some MATIC tokens.
+
 ### ☑️ Installing
 
 A step by step guide to locally run the DApp
@@ -92,10 +97,11 @@ yarn
 MNEMONIC="<Enter your metamask seed phrase here>"
 ALCHEMY_POLYGON_MUMBAI_RPC_URL="https://polygon-mumbai.g.alchemy.com/v2/<Alchemy API Key>"
 ```
+
 - To launch the DApp, use the following command:
 
 ```
-yarn start
+yarn run dev
 ```
 
 ## Smart Contracts
@@ -105,7 +111,6 @@ yarn start
 - EazyVideo: 0x951F6ebD57B5EF3E1Ebf78880e5d99cE394aEECd
 
 ## Video Explaination
-
 
 ### ⬇️ Some important versions of Frameworks and Libraries used in this project are
 
@@ -120,6 +125,6 @@ yarn start
 
 - **Hardik Agarwal** [(@Hardikag17)](https://github.com/Hardikag17)
 - **Preeti Sharma**
-- **Hrishique Munshi** 
+- **Hrishique Munshi**
 
 <br/>
