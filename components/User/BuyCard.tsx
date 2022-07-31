@@ -1,14 +1,33 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { EazyVideoContext } from '../../utils/eazyVideoContext';
 export default function BuyCard() {
   const [services, setServices] = useState([]);
+  const { state } = useContext(EazyVideoContext);
+
   useEffect(() => {
     loadServices();
   });
 
   const loadServices = async () => {
-    // load Number of services
-    // call a loop to services array for all services index
+    try {
+      var totalServices = await state.SubsNFTContract.methods
+        .totalServices()
+        .call({
+          from: state.account,
+        });
+
+      for (let i = 0; i < totalServices; i++) {
+        var service = await state.SubsNFTContract.methods.idToNftItem(i).call({
+          from: state.account,
+        });
+
+        console.log(service);
+        // setServices([...services, service]);
+      }
+    } catch (error) {
+      console.log('error:', error);
+    }
   };
   return (
     <div

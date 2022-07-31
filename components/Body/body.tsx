@@ -1,5 +1,4 @@
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
-import EazyVideoContract from '../../truffle/abis/EazyVideo.json';
 import SubsNFTContract from '../../truffle/abis/eazyVideoNFTContract.json';
 import { NET_ID, RPC_URL, fetchIpfs } from '../../utils/helpers';
 import Web3 from 'web3';
@@ -23,14 +22,8 @@ export default function Body() {
           alert('Wrong network, please switch to the Matic Mumbai testnet!');
         else {
           const account = (await web3.eth.getAccounts())[0];
-          const EazyVideoContractAddress =
-            EazyVideoContract.networks[netId].address;
-          const SubsNFTContractAddress =
-            SubsNFTContract.networks[netId].address;
-          const EazyVideo = new web3.eth.Contract(
-            EazyVideoContract.abi as AbiItem[],
-            EazyVideoContractAddress
-          );
+          const SubsNFTContractAddress = await SubsNFTContract.networks[netId]
+            .address;
           const SubsNFT = new web3.eth.Contract(
             SubsNFTContract.abi as AbiItem[],
             SubsNFTContractAddress
@@ -41,31 +34,36 @@ export default function Body() {
             walletConnected: true,
             web3: web3,
             SubsNFTContract: SubsNFT,
-            EazyVideoContract: EazyVideo,
             accountType: _accountType,
           });
 
-          console.log('account:', state.account);
-
-          var accountType = await state.EazyVideoContract.methods
-            .getAccountType()
+          var accountType = await state.SubsNFTContract.methods
+            .accountType(`${state.account}`)
             .call({
               from: state.account,
             });
 
-          console.log('accountType:', accountType);
+          console.log('accountType:', state.SubsNFTContract);
+
+          if (accountType == 1) {
+            router.push('/user');
+          }
+
+          if (accountType == 2) {
+            router.push('/serviceprovider');
+          }
 
           if (accountType == 0) {
-            var addToPlatform = await state.EazyVideoContract.methods
-              .addToPlatform(_accountType)
+            var addToPlatform = await state.SubsNFTContract.methods
+              .login(_accountType)
               .send({
                 from: state.account,
               });
 
             console.log('New Account Type:', addToPlatform);
 
-            accountType = await state.EazyVideoContract.methods
-              .getAccountType()
+            var accountType = await state.SubsNFTContract.methods
+              .accountType(`${state.account}`)
               .call({
                 from: state.account,
               });

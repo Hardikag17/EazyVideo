@@ -3,7 +3,7 @@ import {
   Store as NotificationStore,
 } from 'react-notifications-component';
 
-export const NET_ID = 80001;
+export const NET_ID = 97;
 
 export const RPC_URL =
   process.env.ALCHEMY_POLYGON_MUMBAI_RPC_URL ??

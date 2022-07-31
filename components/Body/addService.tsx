@@ -52,12 +52,10 @@ export default function AddService() {
     }
   };
 
-  console.log('EazyVideoContract', state.EazyVideoContract);
-
   async function addService(url: string) {
     try {
-      await state.EazyVideoContract.methods
-        .updateService(
+      await state.SubsNFTContract.methods
+        .AddServiceToPlatform(
           formInput.name,
           url,
           formInput.description,
@@ -66,8 +64,10 @@ export default function AddService() {
         )
         .send({
           from: state.account,
-          to: `0x98923f7bd7caa9bf1bcf61a2a3fa8d60cb260e0a`,
         });
+      alert(
+        'Congrats!! we have successfully added your service to our platform'
+      );
     } catch (error) {
       console.log('error:', error);
     }
@@ -154,7 +154,7 @@ export default function AddService() {
         <button
           onClick={createService}
           className='bg-purple m-2 hover:scale-105 cursor-pointer hover:brightness-125 rounded-xl lg:px-10 lg:py-3 p-3 text-white font-semibold lg:text-2xl text-xl text-center'>
-          Update Service
+          Add Service
         </button>
       </div>
     </div>

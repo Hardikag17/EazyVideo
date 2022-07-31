@@ -4,7 +4,6 @@ interface EazyVideoContextInterface {
   walletConnected: boolean;
   web3: string;
   SubsNFTContract: string;
-  EazyVideoContract: string;
   accountType: number;
 }
 
@@ -13,7 +12,6 @@ export const initialState = {
   walletConnected: null,
   web3: '',
   SubsNFTContract: '',
-  EazyVideoContract: '',
   accountType: null,
 };
 
