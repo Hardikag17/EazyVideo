@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useState, useContext } from 'react';
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
+import Loader from '../Loader';
 export default function BuyCard() {
   const [services, setServices] = useState([]);
   const { state } = useContext(EazyVideoContext);

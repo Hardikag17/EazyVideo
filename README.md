@@ -72,7 +72,7 @@ If you don't have Truffle installed, run the following command:
 npm install -g truffle
 ```
 
-Please make sure that the Metamask wallet is connected to the `Polygon Mumbai Testnet` and has some MATIC tokens.
+Please make sure that the Metamask wallet is connected to the `Binance Testnet` and has some BNB tokens.
 
 ### ☑️ Installing
 
@@ -95,7 +95,6 @@ yarn
 
 ```
 MNEMONIC="<Enter your metamask seed phrase here>"
-ALCHEMY_POLYGON_MUMBAI_RPC_URL="https://polygon-mumbai.g.alchemy.com/v2/<Alchemy API Key>"
 ```
 
 - To launch the DApp, use the following command:
@@ -106,8 +105,8 @@ yarn run dev
 
 ## Smart Contracts
 
-- ERC4907: 0x8031cf61739bcD98c4f2bCE7AADd71C1111CE0DE
-- SubsNFT: 0x200AeaCAf25Fc2E65049Cc565C9674D74Fee121d
+- ERC4907: (0x8031cf61739bcD98c4f2bCE7AADd71C1111CE0DE)[https://testnet.bscscan.com/address/0x8031cf61739bcD98c4f2bCE7AADd71C1111CE0DE]
+- SubsNFT: (0x200AeaCAf25Fc2E65049Cc565C9674D74Fee121d)[https://testnet.bscscan.com/address/0x200AeaCAf25Fc2E65049Cc565C9674D74Fee121d]
 
 ## Video Explaination
 

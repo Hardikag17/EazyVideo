@@ -45,11 +45,11 @@ export default function Body() {
 
           console.log('accountType:', state.SubsNFTContract);
 
-          if (accountType == 1) {
+          if (accountType == 1 && _accountType == 1) {
             router.push('/user');
           }
 
-          if (accountType == 2) {
+          if (accountType == 2 && _accountType == 2) {
             router.push('/serviceprovider');
           }
 
@@ -68,12 +68,12 @@ export default function Body() {
                 from: state.account,
               });
           }
-          if (accountType == 1) {
+          if (accountType == 1 && _accountType == 1) {
             router.push('/user');
-          } else if (accountType == 2) {
+          } else if (accountType == 2 && _accountType == 2) {
             router.push('/serviceprovider');
           } else {
-            alert('Try again!!');
+            alert('Something went wrong!!');
           }
         }
       } catch (e) {
