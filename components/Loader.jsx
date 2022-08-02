@@ -1,10 +1,18 @@
-import '../styles/Loader.module.css';
-
-const Loading = () => {
+function Load() {
   return (
-    <div id='loadingProgressG'>
-      <div id='loadingProgressG_1' className='loadingProgressG'></div>
+    <div className='container-fluid position-absolute top-50 start-50 translate-middle text-center'>
+      <div className='lds-roller z-50'>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   );
-};
-export default Loading;
+}
+
+export default Load;

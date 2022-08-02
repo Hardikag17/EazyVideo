@@ -1,9 +1,8 @@
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
 import SubsNFTContract from '../../truffle/abis/eazyVideoNFTContract.json';
-import { NET_ID, RPC_URL, fetchIpfs } from '../../utils/helpers';
+import { NET_ID } from '../../utils/helpers';
 import Web3 from 'web3';
 import type { AbiItem } from 'web3-utils';
-import type { Contract } from 'web3-eth-contract';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 export default function Body() {
@@ -37,13 +36,15 @@ export default function Body() {
             accountType: _accountType,
           });
 
+          console.log(state.account);
+
           var accountType = await state.SubsNFTContract.methods
-            .accountType(`${state.account}`)
+            .accountType(state.account)
             .call({
               from: state.account,
             });
 
-          console.log('accountType:', state.SubsNFTContract);
+          console.log('accountType:', accountType);
 
           if (accountType == 1 && _accountType == 1) {
             router.push('/user');

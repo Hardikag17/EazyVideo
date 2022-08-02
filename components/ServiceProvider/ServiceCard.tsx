@@ -5,8 +5,8 @@ import { EazyVideoContext } from '../../utils/eazyVideoContext';
 import Loader from '../Loader';
 import axios from 'axios';
 export default function ServiceCard() {
-  const { state } = useContext(EazyVideoContext);
-  const [service, setService] = useState([]);
+  const state: EazyVideoContextInterface = useContext(EazyVideoContext);
+  const [service, setService] = useState<ServiceMetadata>();
 
   const loadService = async () => {
     try {
@@ -29,6 +29,7 @@ export default function ServiceCard() {
         description: servicePlan[3],
         duration: servicePlan[4],
         perDayPrice: servicePlan[5],
+        serviceProvider: servicePlan[6],
       };
 
       setService(item);
@@ -41,7 +42,7 @@ export default function ServiceCard() {
 
   return (
     <div>
-      {service.length > 0 ? (
+      {service?.name.length > 0 ? (
         <div
           className={`container w-full text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row `}>
           <div className='bg-blue w-cover border-0 rounded-lg p-2 '>
