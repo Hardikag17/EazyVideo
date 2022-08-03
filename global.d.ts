@@ -35,5 +35,17 @@ interface IPFSMetadata {
   image: string;
 }
 
+interface NFTMetadata {
+  serviceid: number;
+  serviceName: string;
+  ImageUri: string;
+  description: string;
+  duration: number;
+  endTime: number;
+  price: number;
+  owner: string;
+  serviceProvider: string;
+}
+
 //IPFSMetadata
 //{"name":"net","description":"sdfg","perDayPrice":"1","duration":"90","image":"https://ipfs.infura.io/ipfs/QmUr2JP3nAF6E4Q12mgC5M1geFt7F4y6QHUqZFE9wgMZt7"}

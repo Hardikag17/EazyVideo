@@ -6,9 +6,6 @@ import axios from 'axios';
 import { getURL } from 'next/dist/shared/lib/utils';
 export default function BuyCard() {
   const [services, setServices] = useState<ServiceMetadata[]>([]);
-  const [url, ImageUrl] = useState<string>(
-    'https://ipfs.infura.io/ipfs/QmUr2JP3nAF6E4Q12mgC5M1geFt7F4y6QHUqZFE9wgMZt7'
-  );
   const { state } = useContext(EazyVideoContext);
 
   const loadServices = useCallback(async () => {
@@ -24,9 +21,34 @@ export default function BuyCard() {
           from: state.account,
         });
 
-        service.ImageUri = setUrl(service);
+        var item: ServiceMetadata;
+        const metadata = await axios.get(service.ImageUri);
+        if (metadata.data.image == undefined) {
+          item = {
+            name: service.name,
+            ImageUri:
+              'https://ipfs.infura.io/ipfs/QmUr2JP3nAF6E4Q12mgC5M1geFt7F4y6QHUqZFE9wgMZt7',
+            description: service.description,
+            planDuration: service.planDuration,
+            price: service.price,
+            serviceProvider: service.serviceProvider,
+            serviceid: service.serviceid,
+          };
+        } else {
+          item = {
+            name: service.name,
+            ImageUri: metadata.data.image,
+            description: service.description,
+            planDuration: service.planDuration,
+            price: service.price,
+            serviceProvider: service.serviceProvider,
+            serviceid: service.serviceid,
+          };
+        }
 
-        setServices((services) => [...services, service]);
+        console.log('item:', item);
+
+        setServices((services) => [...services, item]);
       }
     } catch (error) {
       console.log('error:', error);
@@ -55,16 +77,6 @@ export default function BuyCard() {
     }
   };
 
-  const setUrl = useCallback(async (item: ServiceMetadata) => {
-    try {
-      const metadata = await axios.get(item.ImageUri);
-      console.log(metadata.data.image);
-      return metadata.data.image;
-    } catch (error) {
-      return '';
-    }
-  }, []);
-
   console.log('state walletConnected:', state.walletConnected);
   return (
     <div>
@@ -76,20 +88,16 @@ export default function BuyCard() {
                 key={i}
                 className={`container w-full h-48 text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row mt-4`}>
                 <div className='bg-blue w-cover h-cover border-0 rounded-lg '>
-                  {url ? (
-                    <div>
-                      <Image
-                        src={url}
-                        blurDataURL='../../assets/eazy_logo.png'
-                        placeholder='blur'
-                        alt='service image'
-                        width={220}
-                        height={210}
-                      />
-                    </div>
-                  ) : (
-                    <div>Subsciption Image</div>
-                  )}
+                  <div>
+                    <Image
+                      src={item.ImageUri}
+                      blurDataURL='../../assets/eazy_logo.png'
+                      placeholder='blur'
+                      alt='service image'
+                      width={220}
+                      height={210}
+                    />
+                  </div>
                 </div>
                 <div className='text-xl px-2 w-full'>
                   <h5 className='text-left text-l'>
