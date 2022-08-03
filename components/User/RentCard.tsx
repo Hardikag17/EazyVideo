@@ -27,7 +27,7 @@ export default function RentCard() {
             <h5>Name</h5>
             <h5>Description</h5>
             <h5>Duration</h5>
-            <h5>x MATIC/Day</h5>
+            <h5>x BNB/Day (Wei)</h5>
           </div>
           <div className='flex flex-col'>
             <div className='bg-white flex items-center rounded-lg border-2 border-solid border-grey shadow-xl'>

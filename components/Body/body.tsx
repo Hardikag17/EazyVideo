@@ -18,7 +18,7 @@ export default function Body() {
         const web3 = new Web3(window.ethereum);
         const netId = await web3.eth.net.getId();
         if (netId !== NET_ID)
-          alert('Wrong network, please switch to the Matic Mumbai testnet!');
+          alert('Wrong network, please switch to the Binance testnet!');
         else {
           const account = (await web3.eth.getAccounts())[0];
           const SubsNFTContractAddress = await SubsNFTContract.networks[netId]

@@ -32,7 +32,7 @@ _IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS networ
 
 **Buy:** Buy the OTT service directly from a service provider.
 
-**Rent:** Rent the user's services for `x` amount of day by paying the `price per day` in matic tokens
+**Rent:** Rent the user's services for `x` amount of day by paying the `price per day` in BNB tokens
 
 **Adding the OTT service:** To add your OTT service organization can verify few checks using their social profiles and register their service for user’s to buy.
 
@@ -40,13 +40,15 @@ _IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS networ
 
 ## Future Aspects
 
+- Service providers will get 5% of price whenever users rent their subscription NFT's through the platform.
+- More customization and user intractive platform.
 - Users get an option to renew the same NFT with an amount which is less then buying a new one. They get this pop-up a day before expiration.
 
 <br/>
 
 ## Technology used
 
-- IPFS, Truffle, Polygon, Web3.js, Solidity, Nextjs, Tailwind css
+- IPFS, Truffle, Binance Testnet, Web3.js, Solidity, Nextjs, Tailwind css
 
 <br/>
 
@@ -78,7 +80,6 @@ Please make sure that the Metamask wallet is connected to the `Binance Testnet` 
 
 A step by step guide to locally run the DApp
 
-- First, get free API keys from [Alchemy](https://docs.alchemy.com/alchemy/documentation/apis/polygon-api)
 - Clone this repository:
 
 ```
