@@ -57,7 +57,8 @@ contract eazyVideoNFTContract is ERC4907 {
     mapping(uint256 => Service) public services;
     mapping(address => uint256[]) public serviceProviderToIds;
     mapping(address => uint256[]) public userAvailablePlans;
-    mapping(address => Lend[]) public userForLendPlans;
+    // here uint256 is the index at the forLendServcies array
+    mapping(address => uint256[]) public userForLendPlans;
 
     Lend[] public forLendServices;
     uint256 public totalServices;
@@ -176,7 +177,8 @@ contract eazyVideoNFTContract is ERC4907 {
         newLendPlan.duration = block.timestamp + (_days * 24 * 60 * 60);
         newLendPlan.renter = address(0);
 
-        userForLendPlans[msg.sender].push(newLendPlan);
+        forLendServices.push(newLendPlan);
+        userForLendPlans[msg.sender].push(totalLendServices);
         totalLendServices = totalLendServices + 1;
 
         // remove token from user availble plans
@@ -298,7 +300,11 @@ contract eazyVideoNFTContract is ERC4907 {
         return userAvailablePlans[msg.sender];
     }
 
-    function fetchAllUserLendNFTPlans() public view returns (Lend[] memory) {
+    function fetchAllUserLendNFTPlans() public view returns (uint256[] memory) {
         return userForLendPlans[msg.sender];
+    }
+
+    function AllLendServicesByIndex(uint256 index) public view returns (Lend memory){
+        return forLendServices[index];
     }
 }

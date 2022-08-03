@@ -8,11 +8,12 @@
 
 ## Problem statement
 
-Usually whenever we take subscription from any OTT platform we often use it only 5-10% of time we subscribe for, but we ends up paying for the whole lot amount of time, this is where our platform XYZ comes.
+Usually whenever we take a subscription from any OTT platform we often use it only for 5-10% of time we subscribe for, but we end up paying for the whole lot of time. Also, often users keep sharing their subscriptions with their friends and a single screen subscription ends up running on multiple devices. It causes losses to service providers. So, a more smooth and efficient suscription system is needed and it would benefit both the parties - Customers and Service Providers.
+
 
 ## Our Solution
 
-Using XYZ platform anyone can rent out their OTT subscriptions while they are not using it and monetize on it. User can take subscriptions for whatever time they like by making customised plans. All of this would be done by using decaying NFTs
+Using EazyVideo platform anyone can rent out their OTT subscriptions while they are not using it and monetize on it. User can take subscriptions for whatever time they like by making customised plans. All of this would be done by using decaying NFTs
 
 # 🤔 Why NFTs?
 
@@ -40,9 +41,16 @@ _IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS networ
 
 ## Future Aspects
 
-- Service providers will get 5% of price whenever users rent their subscription NFT's through the platform.
-- More customization and user intractive platform.
-- Users get an option to renew the same NFT with an amount which is less then buying a new one. They get this pop-up a day before expiration.
+- Including a 5% commission to service providers and 2% commission to platform developers whenever users rent their subscription NFT’s between each others for the business aspect of the platform.
+- Currently there is some work left with the renting options, in the coming future rental feature will be fully functional
+- Using pinata services for IPFS node and option for users to view their NFT’s on Opensea.
+- Making platform more interactive with UI-UX and including more customizable options for users and service providers like:
+  1. Service providers get feature to give users option to renew the same subscription plan from at a discounted rate of 10% before the current plan ending period. Users get notifications in their wallets 2 days before ending period. 
+  2. Trending services page.
+  3. Feature for users to review subscriptions by giving stars and comments.
+  4. Showing total active users on each service etc.
+
+
 
 <br/>
 
