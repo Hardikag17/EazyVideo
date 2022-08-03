@@ -42,7 +42,7 @@ export default function ServiceProvider() {
         <div className='w-full h-full flex flex-col items-center '>
           <div className='border-2 border-solid border-whiteish rounded-xl text-center w-3/4 '>
             <h1 className=' text-white mx-auto font-semibold text-2xl py-2'>
-              {Component[state].title} Service
+              {Component[state].title} Services
             </h1>
             <div className=' flex flex-row justify-around mx-auto'>
               {Component[state].link}

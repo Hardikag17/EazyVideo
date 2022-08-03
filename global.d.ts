@@ -41,10 +41,18 @@ interface NFTMetadata {
   ImageUri: string;
   description: string;
   duration: number;
-  endTime: number;
+  endTime: string;
   price: number;
   owner: string;
   serviceProvider: string;
+}
+
+interface LendMetadata {
+  tokenId: number;
+  price: number;
+  duration: number;
+  renter: string;
+  NFT: NFTMetadata;
 }
 
 //IPFSMetadata

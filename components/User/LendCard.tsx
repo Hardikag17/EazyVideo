@@ -3,9 +3,15 @@ import { EazyVideoContext } from '../../utils/eazyVideoContext';
 import Loader from '../Loader';
 import Image from 'next/image';
 import axios from 'axios';
+import moment from 'moment';
 export default function LendCard() {
   const { state } = useContext(EazyVideoContext);
-  const [userServices, setUserServices] = useState<NFTMetadata[]>([]);
+  const [userAvailableServices, setUserAvailableServices] = useState<
+    NFTMetadata[]
+  >([]);
+  const [userForLendServices, setUserForLendServices] = useState<
+    LendMetadata[]
+  >([]);
   const [formInput, updateFormInput] = useState({
     tokenid: 0,
     price: 0,
@@ -21,7 +27,6 @@ export default function LendCard() {
       price,
       duration,
     });
-    console.log(data);
     try {
       await state.SubsNFTContract.methods
         .LendUserNFTPlan(formInput.tokenid, formInput.duration, formInput.price)
@@ -34,7 +39,7 @@ export default function LendCard() {
     }
   };
 
-  const loadUserServices = useCallback(async () => {
+  const loadUserAvaialableServices = useCallback(async () => {
     try {
       var servicesArray = await state.SubsNFTContract.methods
         .fetchAllUserAvailableNFTPlans()
@@ -43,17 +48,15 @@ export default function LendCard() {
         });
 
       for (var i = 0; i < servicesArray.length; i++) {
-        var NFTPlan: NFTMetadata = await state.SubsNFTContract.methods
+        var NFTPlan = await state.SubsNFTContract.methods
           .idToNftItem(servicesArray[i])
           .call({
             from: state.account,
           });
-
-        console.log('nftplan:', NFTPlan);
-
+        var date = moment.unix(NFTPlan.endTime);
         var item: NFTMetadata;
         const metadata = await axios.get(NFTPlan.ImageUri);
-        console.log('metadata:', metadata);
+
         if (metadata.data.image == undefined) {
           item = {
             serviceid: NFTPlan.serviceid,
@@ -62,7 +65,7 @@ export default function LendCard() {
               'https://ipfs.infura.io/ipfs/QmUr2JP3nAF6E4Q12mgC5M1geFt7F4y6QHUqZFE9wgMZt7',
             description: NFTPlan.description,
             duration: NFTPlan.duration,
-            endTime: NFTPlan.endTime,
+            endTime: date.toString(),
             price: NFTPlan.price,
             owner: NFTPlan.owner,
             serviceProvider: NFTPlan.serviceProvider,
@@ -74,32 +77,105 @@ export default function LendCard() {
             ImageUri: metadata.data.image,
             description: NFTPlan.description,
             duration: NFTPlan.duration,
-            endTime: NFTPlan.endTime,
+            endTime: date.toString(),
             price: NFTPlan.price,
             owner: NFTPlan.owner,
             serviceProvider: NFTPlan.serviceProvider,
           };
         }
 
-        setUserServices((userServices) => [...userServices, NFTPlan]);
+        setUserAvailableServices((userAvailableServices) => [
+          ...userAvailableServices,
+          NFTPlan,
+        ]);
       }
     } catch (error) {
       console.log('error:', error);
     }
-  }, [state, userServices]);
+  }, [state, userAvailableServices]);
+
+  const loadUserForLendServices = useCallback(async () => {
+    try {
+      var forLendArray = await state.SubsNFTContract.methods
+        .totalLendServices()
+        .call({
+          from: state.account,
+        });
+
+      console.log('forLendArray', forLendArray);
+
+      // var servicesArray = await state.SubsNFTContract.methods
+      //   .fetchAllUserLendNFTPlans()
+      //   .call({
+      //     from: state.account,
+      //   });
+
+      // for (var i = 0; i < servicesArray.length; i++) {
+      //   var NFTPlan = await state.SubsNFTContract.methods
+      //     .idToNftItem(servicesArray[i])
+      //     .call({
+      //       from: state.account,
+      //     });
+      //   var date = moment.unix(NFTPlan.endTime);
+      //   var item: NFTMetadata;
+      //   const metadata = await axios.get(NFTPlan.ImageUri);
+      //   console.log('metadata:', metadata);
+      //   if (metadata.data.image == undefined) {
+      //     item = {
+      //       serviceid: NFTPlan.serviceid,
+      //       serviceName: NFTPlan.serviceName,
+      //       ImageUri:
+      //         'https://ipfs.infura.io/ipfs/QmUr2JP3nAF6E4Q12mgC5M1geFt7F4y6QHUqZFE9wgMZt7',
+      //       description: NFTPlan.description,
+      //       duration: NFTPlan.duration,
+      //       endTime: date.toString(),
+      //       price: NFTPlan.price,
+      //       owner: NFTPlan.owner,
+      //       serviceProvider: NFTPlan.serviceProvider,
+      //     };
+      //   } else {
+      //     item = {
+      //       serviceid: NFTPlan.serviceid,
+      //       serviceName: NFTPlan.serviceName,
+      //       ImageUri: metadata.data.image,
+      //       description: NFTPlan.description,
+      //       duration: NFTPlan.duration,
+      //       endTime: date.toString(),
+      //       price: NFTPlan.price,
+      //       owner: NFTPlan.owner,
+      //       serviceProvider: NFTPlan.serviceProvider,
+      //     };
+      //   }
+
+      //   setUserAvailableServices((userAvailableServices) => [
+      //     ...userAvailableServices,
+      //     NFTPlan,
+      //   ]);
+      // }
+    } catch (error) {
+      console.log('error:', error);
+    }
+  }, [state, userForLendServices]);
 
   useEffect(() => {
-    if (state.walletConnected && userServices.length === 0) {
-      loadUserServices();
+    if (state.walletConnected && userAvailableServices.length === 0) {
+      loadUserAvaialableServices();
     }
-    console.log(userServices);
+    if (state.walletConnected && userForLendServices.length === 0) {
+      loadUserForLendServices();
+    }
   });
 
   return (
     <div>
-      {userServices.length > 0 ? (
+      <div className=' text-white my-2 text-2xl py-2'>
+        <hr />
+        <div>Available Plans</div>
+        <hr />
+      </div>
+      {userAvailableServices.length > 0 ? (
         <div>
-          {userServices.map((item, index) => {
+          {userAvailableServices.map((item, index) => {
             return (
               <div
                 key={index}
@@ -160,6 +236,12 @@ export default function LendCard() {
               </div>
             );
           })}
+
+          <div className=' text-white my-2 text-2xl py-2'>
+            <hr />
+            <div>For Lent Plans</div>
+            <hr />
+          </div>
         </div>
       ) : (
         <Loader />

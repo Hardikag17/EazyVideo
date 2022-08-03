@@ -46,8 +46,6 @@ export default function BuyCard() {
           };
         }
 
-        console.log('item:', item);
-
         setServices((services) => [...services, item]);
       }
     } catch (error) {
