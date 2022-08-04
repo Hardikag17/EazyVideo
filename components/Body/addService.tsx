@@ -1,12 +1,13 @@
 import { useState, useContext } from 'react';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
+import { create } from 'ipfs-http-client';
 import { EazyVideoContext } from '../../utils/eazyVideoContext';
-import Loader from '../Loader';
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
+import Image from 'next/image';
 
 export default function AddService() {
   const [fileUrl, setFileUrl] = useState();
   const { state } = useContext(EazyVideoContext);
+
+  const client = create({ url: 'https://ipfs.infura.io:5001/api/v0' });
 
   const [formInput, updateFormInput] = useState({
     perDayPrice: 0,
@@ -22,7 +23,7 @@ export default function AddService() {
       const added = await client.add(file, {
         progress: (prog) => console.log(`received: ${prog}`),
       });
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      const url: any = `https://ipfs.infura.io/ipfs/${added.path}`;
       console.log(url);
       setFileUrl(url);
     } catch (e) {
@@ -147,7 +148,13 @@ export default function AddService() {
               onChange={onChange}
             />
             {fileUrl && (
-              <img className='rounded mt-4' width='350' src={fileUrl} />
+              <Image
+                alt='Ipfs upload image'
+                className='rounded mt-4'
+                width='350'
+                height='200'
+                src={fileUrl}
+              />
             )}
           </div>
         </div>
