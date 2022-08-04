@@ -10,10 +10,10 @@ export default function AddService() {
   const client = create({ url: 'https://ipfs.infura.io:5001/api/v0' });
 
   const [formInput, updateFormInput] = useState({
-    perDayPrice: 0,
+    perDayPrice: '',
     name: '',
     description: '',
-    duration: 0,
+    duration: '',
   });
 
   async function onChange(e: any) {

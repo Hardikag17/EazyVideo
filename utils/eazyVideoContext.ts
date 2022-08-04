@@ -1,12 +1,16 @@
 import { createContext, useContext } from 'react';
 
-export const initialState = {
-  account: '0x0',
-  walletConnected: false,
-  web3: '',
-  SubsNFTContract: '',
-  accountType: 0,
+interface iEazyVideoContextInterface {
+  state: EazyVideoContextInterface | null;
+  setState: React.Dispatch<
+    React.SetStateAction<EazyVideoContextInterface | null>
+  >;
+}
+
+const initialState = {
+  state: null,
+  setState: () => {},
 };
 
 export const EazyVideoContext =
-  createContext<EazyVideoContextInterface>(initialState);
+  createContext<iEazyVideoContextInterface>(initialState);
