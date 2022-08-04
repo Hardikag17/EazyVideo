@@ -1,8 +1,8 @@
 # EazyVideo
 
 > EazyVideo facilitates the user to buy or rent subscriptions of several online streaming platform (OTT’s) under one roof via NFT’s for a custom amount of time.
+![homepage](https://user-images.githubusercontent.com/54525688/182845841-6ae04841-7d31-4a1f-be8b-5591d6b1a47a.png)
 
-![image](https://user-images.githubusercontent.com/54525688/181534177-2dca1ea3-e51c-497a-be3e-75941c61f4e8.png)
 
 <br />
 
@@ -37,6 +37,13 @@ _IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS networ
 **Adding the OTT service:** To add your OTT service organization can verify few checks using their social profiles and register their service for user’s to buy.
 
 ## Snips
+
+**Service Provider Dashboard**
+![currentService](https://user-images.githubusercontent.com/54525688/182846017-f83207e6-b8db-46ba-8d83-9f84d41373b3.png)
+![addService](https://user-images.githubusercontent.com/54525688/182846058-7ba32eec-fd31-42f4-801e-2b8a09e05b66.png)
+
+**User Dashboard**
+![image](https://user-images.githubusercontent.com/54525688/182846207-a16a44ea-1051-45ff-b98d-43d91ea1dfc7.png)
 
 ## Future Aspects
 
