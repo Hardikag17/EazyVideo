@@ -26,7 +26,11 @@ _NFT, Art & Gaming_
 
 ## 💻 Bouties we have worked on
 
-_IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS network
+_IPFS Filecoin Bounty:
+- Project is deployed on IPFS network using fleek servcies.
+  link: [flat-sunset-1472.on.fleek.co](flat-sunset-1472.on.fleek.co)
+
+- User's OTT services NFT images with metadata is being uploaded on IPFS network
 
 ## ⬇️ Services provided by the project
 
