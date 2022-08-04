@@ -6,6 +6,9 @@ const nextConfig = {
     domains: ['ipfs.infura.io'],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;
