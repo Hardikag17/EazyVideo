@@ -10,7 +10,6 @@
 
 Usually whenever we take a subscription from any OTT platform we often use it only for 5-10% of time we subscribe for, but we end up paying for the whole lot of time. Also, often users keep sharing their subscriptions with their friends and a single screen subscription ends up running on multiple devices. It causes losses to service providers. So, a more smooth and efficient suscription system is needed and it would benefit both the parties - Customers and Service Providers.
 
-
 ## Our Solution
 
 Using EazyVideo platform anyone can rent out their OTT subscriptions while they are not using it and monetize on it. User can take subscriptions for whatever time they like by making customised plans. All of this would be done by using decaying NFTs
@@ -45,12 +44,10 @@ _IPFS Filecoin Bounty:_ User's OTT services NFT is being uploaded on IPFS networ
 - Currently there is some work left with the renting options, in the coming future rental feature will be fully functional
 - Using pinata services for IPFS node and option for users to view their NFT’s on Opensea.
 - Making platform more interactive with UI-UX and including more customizable options for users and service providers like:
-  1. Service providers get feature to give users option to renew the same subscription plan from at a discounted rate of 10% before the current plan ending period. Users get notifications in their wallets 2 days before ending period. 
+  1. Service providers get feature to give users option to renew the same subscription plan from at a discounted rate of 10% before the current plan ending period. Users get notifications in their wallets 2 days before ending period.
   2. Trending services page.
   3. Feature for users to review subscriptions by giving stars and comments.
   4. Showing total active users on each service etc.
-
-
 
 <br/>
 
@@ -114,8 +111,8 @@ yarn run dev
 
 ## Smart Contracts
 
-- ERC4907: (0x8031cf61739bcD98c4f2bCE7AADd71C1111CE0DE)[https://testnet.bscscan.com/address/0x8031cf61739bcD98c4f2bCE7AADd71C1111CE0DE]
-- SubsNFT: (0x200AeaCAf25Fc2E65049Cc565C9674D74Fee121d)[https://testnet.bscscan.com/address/0x200AeaCAf25Fc2E65049Cc565C9674D74Fee121d]
+- ERC4907: (0x2971d8B4d6D481da0B731f3630483A47265fE1b3)[https://testnet.bscscan.com/address/0x2971d8B4d6D481da0B731f3630483A47265fE1b3]
+- SubsNFT: (0x207Cde19b7E3472113C81131B7B7F818Df5e91b5)[https://testnet.bscscan.com/address/0x207Cde19b7E3472113C81131B7B7F818Df5e91b5]
 
 ## Video Explaination
 

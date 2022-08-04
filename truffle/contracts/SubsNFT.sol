@@ -211,23 +211,15 @@ contract eazyVideoNFTContract is ERC4907 {
             idToNftItem[_tokenId].owner != msg.sender,
             "You are already the owner of this token"
         );
+
         uint256 index;
+        address _serviceProvider = idToNftItem[_tokenId].owner;
+
         for (uint256 i = 0; i < totalLendServices; i++) {
             if (forLendServices[i].tokenId == _tokenId) index = i;
         }
 
         forLendServices[index].renter = msg.sender;
-
-        // Now remove from user available services
-
-        for (uint256 i = 0; i < totalLendServices; i++) {
-            if (forLendServices[i].tokenId == _tokenId) index = i;
-        }
-        for (uint256 i = index; i < totalLendServices - 1; i++) {
-            forLendServices[i] = forLendServices[i + 1];
-        }
-        delete forLendServices[totalLendServices - 1];
-
         rentNFT(_tokenId, _days, _amount);
     }
 
@@ -304,7 +296,11 @@ contract eazyVideoNFTContract is ERC4907 {
         return userForLendPlans[msg.sender];
     }
 
-    function AllLendServicesByIndex(uint256 index) public view returns (Lend memory){
+    function allLendServicesByIndex(uint256 index)
+        public
+        view
+        returns (Lend memory)
+    {
         return forLendServices[index];
     }
 }

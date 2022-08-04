@@ -66,20 +66,20 @@ export default function ServiceCard() {
     <div>
       <div>(Latest five active services)</div>
       {services.length > 0 ? (
-        <div>
+        <div className=' flex flex-col items-center'>
           {services.map((item, i) => {
             return (
               <div
                 key={i}
-                className={`container w-full text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row my-4 `}>
+                className={`container w-9/12 text-center p-3 border-0 rounded-lg bg-whiteish flex flex-row my-4 `}>
                 <div className='bg-blue w-cover h-[19vh] border-0 rounded-lg '>
                   <Image
                     src={item.ImageUri}
                     blurDataURL='../../assets/eazy_logo.png'
                     placeholder='blur'
                     alt='service image'
-                    width={320}
-                    height={220}
+                    width={280}
+                    height={210}
                   />
                 </div>
                 <div className='text-xl px-2 w-full'>
